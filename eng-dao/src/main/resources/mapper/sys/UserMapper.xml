@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.engdream.sys.mapper.UserMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="org.engdream.dao.sys.entity.User">
+		<result column="organization_id" property="organizationId" />
+		<result column="username" property="username" />
+		<result column="nickname" property="nickname" />
+		<result column="head_img" property="headImg" />
+		<result column="password" property="password" />
+		<result column="salt" property="salt" />
+		<result column="openid" property="openid" />
+		<result column="token" property="token" />
+		<result column="role_ids" property="roleIds" />
+		<result column="locked" property="locked" />
+		<result column="email" property="email" />
+		<result column="mobile" property="mobile" />
+		<result column="qq" property="qq" />
+		<result column="wechat" property="wechat" />
+		<result column="access_token" property="accessToken" />
+		<result column="type" property="type" />
+		<result column="amount" property="amount" />
+		<result column="alipay_account" property="alipayAccount" />
+		<result column="realname" property="realname" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        organization_id AS organizationId, username, nickname, head_img AS headImg, password, salt, openid, token, role_ids AS roleIds, locked, email, mobile, qq, wechat, access_token AS accessToken, type, amount, alipay_account AS alipayAccount, realname
+    </sql>
+
+</mapper>
