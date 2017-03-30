@@ -13,6 +13,9 @@
         <dependent-module archiveName="eng-common-1.0.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/eng-common/eng-common">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="eng-security-1.0.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/eng-security/eng-security">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <property name="context-root" value="eng-web"/>
         <property name="java-output-path" value="/eng-web/target/classes"/>
     </wb-module>

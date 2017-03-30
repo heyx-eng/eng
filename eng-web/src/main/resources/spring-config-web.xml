@@ -68,10 +68,6 @@
             </bean>
         </mvc:message-converters>
 
-        <!-- <mvc:argument-resolvers>
-            <bean class="com.o2oshouyou.common.web.bind.CurrentUserMethodArgumentResolver"/>
-        </mvc:argument-resolvers>
- -->
     </mvc:annotation-driven>
 
     <mvc:view-controller path="/" view-name="redirect:/index"/>
@@ -86,7 +82,7 @@
         <bean class="org.springframework.web.servlet.handler.ConversionServiceExposingInterceptor">
             <constructor-arg ref="conversionService"/>
         </bean>
-        <bean class="org.engdream.common.web.intercepter.BaseWebInterceptor"/>
+        <bean class="org.engdream.base.web.interceptor.BaseWebInterceptor"/>
     </mvc:interceptors>
 
 

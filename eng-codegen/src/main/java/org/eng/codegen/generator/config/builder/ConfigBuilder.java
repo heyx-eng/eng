@@ -236,7 +236,8 @@ public class ConfigBuilder {
 			pathInfo.put(ConstVal.MAPPER_PATH, joinPath(getGlobalConfig().getMapperJavaOutputDir(), packageInfo.get(ConstVal.MAPPER)));
 		}
 		if (StringUtils.isNotEmpty(template.getXml())) {
-			pathInfo.put(ConstVal.XML_PATH, joinPath(getGlobalConfig().getMapperXmlOutputDir(), packageInfo.get(ConstVal.XML)));
+			//xml生成到resources下 
+			pathInfo.put(ConstVal.XML_PATH, joinPath(getGlobalConfig().getMapperXmlOutputDir(), config.getModuleName()));
 		}
 		if (StringUtils.isNotEmpty(template.getService())) {
 			pathInfo.put(ConstVal.SERIVCE_PATH, joinPath(getGlobalConfig().getServiceOutputDir(), packageInfo.get(ConstVal.SERIVCE)));

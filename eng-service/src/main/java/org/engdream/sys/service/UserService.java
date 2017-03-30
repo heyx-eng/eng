@@ -1,7 +1,7 @@
 package org.engdream.sys.service;
 
 import org.engdream.sys.entity.User;
-import org.engdream.common.base.BaseService;
+import org.engdream.base.service.BaseService;
 
 /**
  * <p>
@@ -9,8 +9,8 @@ import org.engdream.common.base.BaseService;
  * </p>
  *
  * @author Heyx
- * @since 2017-03-29
+ * @since 2017-03-30
  */
-public interface UserService extends BaseService<User> {
+public interface UserService extends BaseService<User, Long> {
 	
 }

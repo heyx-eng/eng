@@ -3,31 +3,24 @@
 <mapper namespace="org.engdream.sys.mapper.UserMapper">
 
 	<!-- 通用查询映射结果 -->
-	<resultMap id="BaseResultMap" type="org.engdream.dao.sys.entity.User">
-		<result column="organization_id" property="organizationId" />
+	<resultMap id="BaseResultMap" type="org.engdream.sys.entity.User">
 		<result column="username" property="username" />
-		<result column="nickname" property="nickname" />
-		<result column="head_img" property="headImg" />
 		<result column="password" property="password" />
 		<result column="salt" property="salt" />
-		<result column="openid" property="openid" />
-		<result column="token" property="token" />
 		<result column="role_ids" property="roleIds" />
-		<result column="locked" property="locked" />
+		<result column="is_locked" property="isLocked" />
+		<result column="nickname" property="nickname" />
+		<result column="avatar" property="avatar" />
 		<result column="email" property="email" />
 		<result column="mobile" property="mobile" />
 		<result column="qq" property="qq" />
 		<result column="wechat" property="wechat" />
-		<result column="access_token" property="accessToken" />
-		<result column="type" property="type" />
-		<result column="amount" property="amount" />
-		<result column="alipay_account" property="alipayAccount" />
-		<result column="realname" property="realname" />
+		<result column="is_delete" property="isDelete" />
 	</resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        organization_id AS organizationId, username, nickname, head_img AS headImg, password, salt, openid, token, role_ids AS roleIds, locked, email, mobile, qq, wechat, access_token AS accessToken, type, amount, alipay_account AS alipayAccount, realname
+        username, password, salt, role_ids AS roleIds, is_locked AS isLocked, nickname, avatar, email, mobile, qq, wechat, is_delete AS isDelete
     </sql>
 
 </mapper>

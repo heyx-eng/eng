@@ -8,9 +8,7 @@
 		<artifactId>eng</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
-	<groupId>org.engdream</groupId>
 	<artifactId>eng-service</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
 	<name>eng-service</name>
 	<url>http://maven.apache.org</url>
 	<properties>

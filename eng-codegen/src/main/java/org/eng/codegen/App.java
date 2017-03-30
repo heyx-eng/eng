@@ -88,17 +88,17 @@ public class App {
         // 字段名生成策略
         strategy.setNaming(NamingStrategy.underline_to_camel);
         // 自定义实体父类
-        strategy.setSuperEntityClass("org.engdream.common.base.BaseEntity");
+        strategy.setSuperEntityClass("org.engdream.base.entity.BaseEntity");
         // 自定义实体，公共字段
-        strategy.setSuperEntityColumns(new String[] { "id" });
+        strategy.setSuperEntityColumns(new String[] { "id", "create_time", "modified_time" });
         // 自定义 mapper 父类
         // strategy.setSuperMapperClass("com.baomidou.demo.TestMapper");
         // 自定义 service 父类
-        strategy.setSuperServiceClass("org.engdream.common.base.BaseService");
+        strategy.setSuperServiceClass("org.engdream.base.service.BaseService");
         // 自定义 service 实现类父类
-        strategy.setSuperServiceImplClass("org.engdream.common.base.impl.BaseServiceImpl");
+        strategy.setSuperServiceImplClass("org.engdream.base.service.impl.BaseServiceImpl");
         // 自定义 controller 父类
-        strategy.setSuperControllerClass("org.engdream.common.base.BaseController");
+        strategy.setSuperControllerClass("org.engdream.base.web.controller.BaseController");
         // 【实体】是否生成字段常量（默认 false）
         // public static final String ID = "test_id";
         // strategy.setEntityColumnConstant(true);
@@ -110,6 +110,7 @@ public class App {
         // 包配置
         PackageConfig pc = new PackageConfig();
         pc.setParent("org.engdream");
+        pc.setController("web.controller");
 		pc.setModuleName(moduleName);
         mpg.setPackageInfo(pc);
         
