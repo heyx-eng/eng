@@ -7,6 +7,7 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.subject.Subject;
 import org.engdream.base.entity.BaseEntity;
+import org.engdream.common.util.LogUtil;
 import org.engdream.common.util.ReflectUtils;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.http.HttpStatus;
@@ -100,6 +101,7 @@ public abstract class BaseController<M extends BaseEntity<ID>, ID extends Serial
     @ExceptionHandler(Exception.class)
 	public void exceptionHandler(HttpServletRequest request, HttpServletResponse response, Exception e)
 			throws Exception {
+    	LogUtil.e("异常", e);
     	if(e instanceof UnauthorizedException){
     		response.setStatus(HttpStatus.UNAUTHORIZED.value());
     		response.getWriter().write("你没有权限访问");
@@ -111,8 +113,9 @@ public abstract class BaseController<M extends BaseEntity<ID>, ID extends Serial
 	}
     
     protected void assertPermission(String perms) {
-		Subject subject = SecurityUtils.getSubject();
-		subject.checkPermission(getResourcePrefix()+":"+perms);
+    	return;
+		/*Subject subject = SecurityUtils.getSubject();
+		subject.checkPermission(getResourcePrefix()+":"+perms);*/
 	}
     
 	protected abstract String getResourcePrefix();
