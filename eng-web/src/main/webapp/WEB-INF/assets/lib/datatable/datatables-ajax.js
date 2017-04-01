@@ -8,8 +8,16 @@ var TableDatatablesAjax = function () {
         });
     }*/
 
-    var handleRecords = function () {
-
+    var handleRecords = function (opt) {
+    	var columnDefOpt = [{
+            searchable: false,
+            orderable: false,
+            className: 'select-checkbox',
+            targets:   0
+        }];
+        if(opt.columnDefs){
+            columnDefOpt = columnDefOpt.concat(opt.columnDefs);
+        }
         var grid = new Datatable();
 
         grid.init({
@@ -26,13 +34,7 @@ var TableDatatablesAjax = function () {
                 // execute some code on ajax data load
             },
             loadingMessage: 'Loading...',
-            dataTable: { // here you can define a typical datatable settings from http://datatables.net/usage/options 
-
-                // Uncomment below line("dom" parameter) to fix the dropdown overflow issue in the datatable cells. The default datatable layout
-                // setup uses scrollable div(table-scrollable) with overflow:auto to enable vertical scroll(see: assets/global/scripts/datatable.js). 
-                // So when dropdowns used the scrollable div should be removed. 
-                //"dom": "<'row'<'col-md-8 col-sm-12'pli><'col-md-4 col-sm-12'<'table-group-actions pull-right'>>r>t<'row'<'col-md-8 col-sm-12'pli><'col-md-4 col-sm-12'>>",
-                
+            dataTable: {
                 "bStateSave": true, // save datatable state(pagination, sort, etc) in cookie.
 
                 "lengthMenu": [
@@ -43,59 +45,38 @@ var TableDatatablesAjax = function () {
                 "ajax": {
                     "url": "/eng-web/sys/user/list", // ajax source
                 },
-                columns: [
-                  {"data": "id"},
-                  {"data": "username"},
-                  {"data": "username"},
-                  {"data": "username"},
-                  {"data": "createTime"},
-                  {"data": "createTime"},
-                  {"data": "createTime"},
-                  {"data": "createTime"},
-                  {"data": "username"}
-                ],
+                columns: opt.columns,
                 select: {
                     style:    'multi',
                     selector: 'td:first-child'
                 },
-                columnDefs:[
-                    {
-                        targets: 0
-                    }
-                ],
-                "order": [
-                    [1, "asc"]
-                ]// set first column as a default sort by asc
+                columnDefs: columnDefOpt,
+                "order": []
             }
         });
 
         // handle group actionsubmit button click
         grid.getTableWrapper().on('click', '.table-group-action-submit', function (e) {
             e.preventDefault();
-            var action = $(".table-group-action-input", grid.getTableWrapper());
-            if (action.val() != "" && grid.getSelectedRowsCount() > 0) {
-                grid.setAjaxParam("customActionType", "group_action");
-                grid.setAjaxParam("customActionName", action.val());
-                grid.setAjaxParam("id", grid.getSelectedRows());
+            var action = $(".table-group-action-select", grid.getTableWrapper());
+            if (action.val() != "") {
+            	var input = $(".table-group-action-input", grid.getTableWrapper());
+                grid.setAjaxParam(action.val(), input.val());
                 grid.getDataTable().ajax.reload();
                 grid.clearAjaxParams();
             } else if (action.val() == "") {
-               /* App.alert({
-                    type: 'danger',
-                    icon: 'warning',
-                    message: 'Please select an action',
-                    container: grid.getTableWrapper(),
-                    place: 'prepend'
-                });*/
-            } else if (grid.getSelectedRowsCount() === 0) {
-               /* App.alert({
-                    type: 'danger',
-                    icon: 'warning',
-                    message: 'No record selected',
-                    container: grid.getTableWrapper(),
-                    place: 'prepend'
-                });*/
+            	alert("请选择查询条件")
             }
+        });
+        
+        grid.getTableWrapper().on('click', '#editable_create', function (e) {
+            e.preventDefault();
+        });
+        grid.getTableWrapper().on('click', '#editable_edit', function (e) {
+            e.preventDefault();
+        });
+        grid.getTableWrapper().on('click', '#editable_delete', function (e) {
+            e.preventDefault();
         });
 
         //grid.setAjaxParam("customActionType", "group_action");
@@ -104,18 +85,10 @@ var TableDatatablesAjax = function () {
     }
 
     return {
-
-        //main function to initiate the module
-        init: function () {
-
-            //initPickers();
-            handleRecords();
+        init: function (options) {
+            handleRecords(options);
         }
 
     };
 
 }();
-
-jQuery(document).ready(function() {
-    TableDatatablesAjax.init();
-});

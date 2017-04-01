@@ -31,6 +31,7 @@ import org.apache.ibatis.logging.LogFactory;
 import org.apache.ibatis.session.SqlSession;
 import org.engdream.base.entity.BaseEntity;
 import org.engdream.base.service.BaseService;
+import org.engdream.base.util.SqlUtil;
 import org.engdream.common.util.ReflectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -287,15 +288,16 @@ public class BaseServiceImpl<T extends BaseEntity<ID>, ID extends Serializable> 
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Page<Map<String, Object>> selectMapsPage(Page page, Wrapper<T> wrapper) {
-		SqlHelper.fillWrapper(page, wrapper);
+		SqlUtil.fillWrapper(page, wrapper);
 		page.setRecords(baseMapper.selectMapsPage(page, wrapper));
 		return page;
 	}
 
 	public Page<T> selectPage(Page<T> page, Wrapper<T> wrapper) {
-		SqlHelper.fillWrapper(page, wrapper);
+		SqlUtil.fillWrapper(page, wrapper);
 		page.setRecords(baseMapper.selectPage(page, wrapper));
 		return page;
 	}
+	
 
 }

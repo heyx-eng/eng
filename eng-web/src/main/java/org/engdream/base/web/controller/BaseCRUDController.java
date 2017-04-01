@@ -2,11 +2,15 @@ package org.engdream.base.web.controller;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.List;
 
 import javax.validation.Valid;
 
 import org.engdream.base.entity.BaseEntity;
+import org.engdream.base.entity.DataTable;
 import org.engdream.base.service.BaseService;
+import org.engdream.base.web.annotation.SearchParam;
+import org.engdream.sys.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +20,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import com.baomidou.mybatisplus.plugins.Page;
 
 /**
  * 基础增删改查controller
@@ -66,6 +72,20 @@ public abstract class BaseCRUDController<M extends BaseEntity<ID>, ID extends Se
 		}
 		baseService.updateById(m);
 		return ResponseEntity.ok("修改成功");
+	}
+	
+	@RequestMapping(value = "list", method = RequestMethod.GET)
+	public ResponseEntity<DataTable<M>> list(@SearchParam Page<M> page){
+		assertPermission(PERMS_VIEW);
+		DataTable<M> table =  new DataTable<>(baseService.selectPage(page));
+		return ResponseEntity.ok(table);
+	}
+	
+	@RequestMapping(value = "all", method = RequestMethod.GET)
+	public ResponseEntity<List<M>> all(){
+		assertPermission(PERMS_VIEW);
+		List<M> list =  baseService.selectList(null);
+		return ResponseEntity.ok(list);
 	}
 	
 	@RequestMapping(value = "delete", method = RequestMethod.DELETE)

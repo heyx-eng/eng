@@ -23,7 +23,6 @@ var Datatable = function() {
     };
 
     return {
-
         //main function to initiate the module
         init: function(options) {
 
@@ -39,9 +38,9 @@ var Datatable = function() {
                 filterApplyAction: "filter",
                 filterCancelAction: "filter_cancel",
                 resetGroupActionInputOnSuccess: true,
-                loadingMessage: 'Loading...',
+                loadingMessage: '加载中...',
                 dataTable: {
-                    "dom": "<'row'<'col-md-8 col-sm-12'><'col-md-4 col-sm-12'<'table-group-actions pull-right'>>r><'table-responsive't><'row'<'col-md-4 col-sm-12'li><'col-md-8 col-sm-12'<'pull-right'p>>>", // datatable layout
+                    "dom": "<'row'<'col-md-6 col-sm-12'<'table-edit-actions pull-left'>><'col-md-6 col-sm-12'<'table-group-actions pull-right'>>r><'table-responsive't><'row'<'col-md-4 col-sm-12'i><'col-md-8 col-sm-12'<'pull-right'p>>>", // datatable layout
                     "pageLength": 10, // default records per page
                     "language": { // language settings
                         // metronic spesific
@@ -68,11 +67,14 @@ var Datatable = function() {
                     "columnDefs": [{ // define columns sorting options(by default all columns are sortable extept the first checkbox column)
                         'orderable': false,
                         'targets': [0],
-                        'className': 'select-checkbox'
+                        'className': 'select-checkbox',
+                        'render': function(data){
+                        	return '';
+                        }
                     }],
 
                     //"pagingType": "bootstrap_full_number", // pagination type(bootstrap, bootstrap_full_number or bootstrap_extended)
-                    "autoWidth": false, // disable fixed width and enable fluid table
+                    "autoWidth": true, // disable fixed width and enable fluid table
                     "processing": false, // enable/disable display message box on record load
                     "serverSide": true, // enable/disable server side ajax loading
 
@@ -81,60 +83,35 @@ var Datatable = function() {
                         "type": "GET", // request type
                         "timeout": 20000,
                         "data": function(data) { // add request parameters before submit
+                        	var page = 1;
+                            var size = 10;
+                            var draw = 1;
+                        	for(var key in data){
+                        		if("draw" == key){
+                        			draw = data[key];
+                                } else if("start" == key){
+                                	page = data[key];
+                                }else if("length" == key){
+                                	size = data[key];
+                                }
+                                delete data[key];
+                        	}
+                        	data['page'] = Math.floor(page/size)+1;
+                        	data['size'] = size;
                             $.each(ajaxParams, function(key, value) {
                                 data[key] = value;
                             });
-                            /*App.blockUI({
-                                message: tableOptions.loadingMessage,
-                                target: tableContainer,
-                                overlayColor: 'none',
-                                cenrerY: true,
-                                boxed: true
-                            });*/
                         },
                         "dataSrc": function(res) { // Manipulate the data returned from the server
-                            if (res.customActionMessage) {
-                               /* App.alert({
-                                    type: (res.customActionStatus == 'OK' ? 'success' : 'danger'),
-                                    icon: (res.customActionStatus == 'OK' ? 'check' : 'warning'),
-                                    message: res.customActionMessage,
-                                    container: tableWrapper,
-                                    place: 'prepend'
-                                });*/
-                            }
-
-                            if (res.customActionStatus) {
-                                if (tableOptions.resetGroupActionInputOnSuccess) {
-                                    $('.table-group-action-input', tableWrapper).val("");
-                                }
-                            }
-
-                            if ($('.group-checkable', table).size() === 1) {
-                                $('.group-checkable', table).attr("checked", false);
-                            }
-
                             if (tableOptions.onSuccess) {
                                 tableOptions.onSuccess.call(undefined, the, res);
                             }
-
-                            /*App.unblockUI(tableContainer);*/
-
                             return res.data;
                         },
                         "error": function() { // handle general connection errors
                             if (tableOptions.onError) {
                                 tableOptions.onError.call(undefined, the);
                             }
-
-                           /* App.alert({
-                                type: 'danger',
-                                icon: 'warning',
-                                message: tableOptions.dataTable.language.metronicAjaxRequestGeneralError,
-                                container: tableWrapper,
-                                place: 'prepend'
-                            });
-
-                            App.unblockUI(tableContainer);*/
                         }
                     },
 
@@ -143,8 +120,6 @@ var Datatable = function() {
                             tableInitialized = true; // set table initialized
                             table.show(); // display table
                         }
-                        countSelectedRecords(); // reset selected records indicator
-
                         // callback for ajax data load
                         if (tableOptions.onDataLoad) {
                             tableOptions.onDataLoad.call(undefined, the);
@@ -179,17 +154,23 @@ var Datatable = function() {
 
             // build table group actions panel
             if ($('.table-actions-wrapper', tableContainer).size() === 1) {
-                $('.table-group-actions', tableWrapper).html($('.table-actions-wrapper', tableContainer).html()); // place the panel inside the wrapper
-                $('.table-actions-wrapper', tableContainer).remove(); // remove the template container
+                $('.table-group-actions', tableWrapper).html($('.table-actions-wrapper', tableContainer).html());
+                $('.table-actions-wrapper', tableContainer).remove();
+            }
+            if ($('.table-edit-wrapper', tableContainer).size() === 1) {
+                $('.table-edit-actions', tableWrapper).html($('.table-edit-wrapper', tableContainer).html());
+                $('.table-edit-wrapper', tableContainer).remove();
             }
             // handle group checkboxes check/uncheck
             $('.group-checkable', table).change(function() {
-                var set = table.find('tbody > tr > td:nth-child(1) input[type="checkbox"]');
-                var checked = $(this).prop("checked");
-                $(set).each(function() {
-                    $(this).prop("checked", checked);
-                });
-                countSelectedRecords();
+            	var selected = $(this).prop("checked");
+            	if(!selected){
+            		dataTable.rows().deselect();
+                    selected= false;
+                }else{
+                	dataTable.rows().select();
+                    selected = true;
+                }
             });
 
             // handle row's checkbox click
@@ -241,19 +222,6 @@ var Datatable = function() {
             the.clearAjaxParams();
             the.addAjaxParam("action", tableOptions.filterCancelAction);
             dataTable.ajax.reload();
-        },
-
-        getSelectedRowsCount: function() {
-            return $('tbody > tr > td:nth-child(1) input[type="checkbox"]:checked', table).size();
-        },
-
-        getSelectedRows: function() {
-            var rows = [];
-            $('tbody > tr > td:nth-child(1) input[type="checkbox"]:checked', table).each(function() {
-                rows.push($(this).val());
-            });
-
-            return rows;
         },
 
         setAjaxParam: function(name, value) {

@@ -1,0 +1,15 @@
+.dataTable {
+	margin: 20px 0 !important;
+}
+.dataTables_paginate,
+.dataTables_length,
+.dataTables_info {
+	display: inline-block;
+	float: none !important;
+	margin: 0 !important;
+	padding: 0 10px !important;
+	position: static !important;
+}
+.table-responsive {
+	overflow-x:auto;
+}
