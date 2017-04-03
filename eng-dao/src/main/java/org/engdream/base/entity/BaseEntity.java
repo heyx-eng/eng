@@ -1,9 +1,9 @@
 package org.engdream.base.entity;
 
+import com.baomidou.mybatisplus.annotations.TableField;
+
 import java.io.Serializable;
 import java.util.Date;
-
-import com.baomidou.mybatisplus.annotations.TableField;
 
 public class BaseEntity<ID extends Serializable> implements Serializable{
 	private ID id;

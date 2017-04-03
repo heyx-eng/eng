@@ -48,14 +48,14 @@
                                     <span></span>
                                 </label>
                             </th>
-                            <th> username </th>
-                            <th> realname </th>
-                            <th> nickname </th>
-                            <th> roleIds </th>
-                            <th> roleIds </th>
-                            <th> roleIds </th>
-                            <th> roleIds </th>
-                            <th> roleIds </th>
+                            <th> 是否锁定 </th>
+                            <th> 是否锁定 </th>
+                            <th> 是否锁定 </th>
+                            <th> 是否锁定 </th>
+                            <th> 是否锁定 </th>
+                            <th> 是否锁定 </th>
+                            <th> 是否锁定 </th>
+                            <th> 是否锁定 </th>
                         </tr>
                     </thead>
                     <tbody> </tbody>
@@ -69,6 +69,7 @@
 	<script type="text/javascript">
 		$(function() {
 			TableDatatablesAjax.init({
+			    baseurl: '${ctx}/sys/user/',
 				columns: [
 	                {"data": "id"},
 	                {"data": "username", "defaultContent": ""},

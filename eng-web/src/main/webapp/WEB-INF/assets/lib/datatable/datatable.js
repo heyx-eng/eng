@@ -11,17 +11,6 @@ var Datatable = function() {
     var tableInitialized = false;
     var ajaxParams = {}; // set filter mode
     var the;
-
-    var countSelectedRecords = function() {
-        var selected = $('tbody > tr > td:nth-child(1) input[type="checkbox"]:checked', table).size();
-        var text = tableOptions.dataTable.language.metronicGroupActions;
-        if (selected > 0) {
-            $('.table-group-actions > span', tableWrapper).text(text.replace("_TOTAL_", selected));
-        } else {
-            $('.table-group-actions > span', tableWrapper).text("");
-        }
-    };
-
     return {
         //main function to initiate the module
         init: function(options) {
@@ -72,12 +61,11 @@ var Datatable = function() {
                         	return '';
                         }
                     }],
-
                     //"pagingType": "bootstrap_full_number", // pagination type(bootstrap, bootstrap_full_number or bootstrap_extended)
-                    "autoWidth": true, // disable fixed width and enable fluid table
+                    "bAutoWidth": true, // disable fixed width and enable fluid table
+                    "sScrollX": true,
                     "processing": false, // enable/disable display message box on record load
                     "serverSide": true, // enable/disable server side ajax loading
-
                     "ajax": { // define ajax settings
                         "url": "", // ajax URL
                         "type": "GET", // request type
@@ -162,21 +150,18 @@ var Datatable = function() {
                 $('.table-edit-wrapper', tableContainer).remove();
             }
             // handle group checkboxes check/uncheck
-            $('.group-checkable', table).change(function() {
-            	var selected = $(this).prop("checked");
-            	if(!selected){
+            $('.group-checkable').change(function(e) {
+            	if(!$(this).prop("checked")){
             		dataTable.rows().deselect();
-                    selected= false;
                 }else{
                 	dataTable.rows().select();
-                    selected = true;
                 }
             });
 
             // handle row's checkbox click
-            table.on('change', 'tbody > tr > td:nth-child(1) input[type="checkbox"]', function() {
+           /* table.on('change', 'tbody > tr > td:nth-child(1) input[type="checkbox"]', function() {
                 countSelectedRecords();
-            });
+            });*/
 
             // handle filter submit button click
             table.on('click', '.filter-submit', function(e) {

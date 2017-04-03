@@ -33,7 +33,7 @@ var TableDatatablesAjax = function () {
             onDataLoad: function(grid) {
                 // execute some code on ajax data load
             },
-            loadingMessage: 'Loading...',
+            loadingMessage: '加载中...',
             dataTable: {
                 "bStateSave": true, // save datatable state(pagination, sort, etc) in cookie.
 
@@ -43,7 +43,7 @@ var TableDatatablesAjax = function () {
                 ],
                 "pageLength": 10, // default record count per page
                 "ajax": {
-                    "url": "/eng-web/sys/user/list", // ajax source
+                    "url": opt.baseurl+'list', // ajax source
                 },
                 columns: opt.columns,
                 select: {
@@ -71,12 +71,73 @@ var TableDatatablesAjax = function () {
         
         grid.getTableWrapper().on('click', '#editable_create', function (e) {
             e.preventDefault();
+            location.href = opt.baseurl+'page/create';
         });
         grid.getTableWrapper().on('click', '#editable_edit', function (e) {
             e.preventDefault();
+            var rows = grid.getDataTable().rows( { selected: true } );
+            if(rows.data().length < 1){
+                alert("请选择数据!");
+                return;
+            }
+            if(rows.data().length > 1){
+                alert("只能选择一条数据!");
+                return;
+            }
+            location.href = opt.baseurl+'page/edit?id='+rows.data()[0].id;
         });
         grid.getTableWrapper().on('click', '#editable_delete', function (e) {
             e.preventDefault();
+            var rows = grid.getDataTable().rows( { selected: true } );
+            if(rows.data().length < 1){
+                alert("请选择数据!");
+                return;
+            }
+            if(rows.data().length == 1){
+                if(confirm("确定删除?")){
+                    $.ajax({
+                        url: opt.baseurl+"delete",
+                        type: "post",
+                        data: {
+                            "id": rows.data()[0].id,
+                            "_method": "delete"
+                        },
+                        success: function (result) {
+                            alert("删除成功");
+                            grid.getDataTable().ajax.reload();
+                        },
+                        error: function (e) {
+                            alert(e.responseText);
+                        }
+                    });
+                }
+            } else{
+                if(confirm("确定删除?")){
+                    var ids = "";
+                    for(var i=0; i< rows.data().length; i++){
+                        if(ids == ""){
+                            ids = rows.data()[i].id;
+                        } else{
+                            ids += "," + rows.data()[i].id;
+                        }
+                    }
+                    $.ajax({
+                        url: opt.baseurl+"batchDelete",
+                        type: "post",
+                        data: {
+                            "ids": ids,
+                            "_method": "delete"
+                        },
+                        success: function (result) {
+                            alert("删除成功");
+                            grid.getDataTable().ajax.reload();
+                        },
+                        error: function (e) {
+                            alert(e.responseText);
+                        }
+                    });
+                }
+            }
         });
 
         //grid.setAjaxParam("customActionType", "group_action");

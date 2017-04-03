@@ -1,22 +1,24 @@
 package org.engdream.base.web.controller;
 
-import java.io.Serializable;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.UnauthorizedException;
-import org.apache.shiro.subject.Subject;
 import org.engdream.base.entity.BaseEntity;
 import org.engdream.common.util.LogUtil;
 import org.engdream.common.util.ReflectUtils;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.http.HttpStatus;
+import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.Serializable;
 
 public abstract class BaseController<M extends BaseEntity<ID>, ID extends Serializable> {
 	protected static final String PERMS_VIEW = "view";
+	protected static final String PERMS_REVIEW = "review";
 	protected static final String PERMS_CREATE = "create";
 	protected static final String PERMS_UPDATE = "update";
 	protected static final String PERMS_DELETE = "delete";
@@ -33,6 +35,9 @@ public abstract class BaseController<M extends BaseEntity<ID>, ID extends Serial
         setViewPrefix(defaultViewPrefix());
     }
 
+    protected void setCommonDate(Model model){
+
+    }
     /**
      * 当前模块 视图的前缀
      * 默认
@@ -107,9 +112,14 @@ public abstract class BaseController<M extends BaseEntity<ID>, ID extends Serial
     		response.getWriter().write("你没有权限访问");
     		return;
     	}
+        if(e instanceof MethodArgumentTypeMismatchException){
+            response.setStatus(HttpStatus.BAD_REQUEST.value());
+            response.getWriter().write("请求参数错误");
+            return;
+        }
+
     	response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
 		response.getWriter().write("服务器错误，请稍后重试!");
-		return;
 	}
     
     protected void assertPermission(String perms) {

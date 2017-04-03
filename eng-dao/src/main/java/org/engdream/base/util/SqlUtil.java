@@ -1,15 +1,13 @@
 package org.engdream.base.util;
 
+import com.baomidou.mybatisplus.enums.SqlLike;
+import com.baomidou.mybatisplus.mapper.Wrapper;
+import com.baomidou.mybatisplus.plugins.Page;
+import org.engdream.base.util.entity.SearchCondition;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import org.engdream.base.util.entity.SearchCondition;
-
-import com.baomidou.mybatisplus.enums.SqlLike;
-import com.baomidou.mybatisplus.mapper.Condition;
-import com.baomidou.mybatisplus.mapper.Wrapper;
-import com.baomidou.mybatisplus.plugins.Page;
 
 public class SqlUtil {
 	
@@ -57,7 +55,7 @@ public class SqlUtil {
 	}
 	/**
 	 * 获取查询条件 格式如： username_like=value
-	 * @param condition
+	 * @param conditionMap
 	 * @return
 	 */
 	private static List<SearchCondition> extraParam(Map<String, Object> conditionMap) {

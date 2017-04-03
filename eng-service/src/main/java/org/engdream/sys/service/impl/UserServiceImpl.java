@@ -8,13 +8,21 @@ import org.springframework.stereotype.Service;
 
 /**
  * <p>
- *  服务实现类
+ * 用户信息 服务实现类
  * </p>
  *
  * @author Heyx
- * @since 2017-03-30
+ * @since 2017-04-03
  */
 @Service
 public class UserServiceImpl extends BaseServiceImpl<User, Long> implements UserService {
-	
+
+    public UserMapper getUserMapper(){
+        return (UserMapper)baseMapper;
+    }
+
+    @Override
+    public void markDelete(Long id){
+        getUserMapper().markDelete(id);
+    }
 }

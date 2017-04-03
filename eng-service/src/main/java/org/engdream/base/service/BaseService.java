@@ -17,12 +17,11 @@ package org.engdream.base.service;
 
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
+import org.engdream.base.entity.BaseEntity;
 
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
-
-import org.engdream.base.entity.BaseEntity;
 
 public interface BaseService<T extends BaseEntity<ID>, ID extends Serializable> {
 

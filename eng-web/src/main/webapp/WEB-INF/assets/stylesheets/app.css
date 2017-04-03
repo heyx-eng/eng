@@ -1,5 +1,8 @@
-.dataTable {
-	margin: 20px 0 !important;
+th, td {
+	white-space: nowrap;
+}
+.dataTables_scrollHead {
+	margin: 20px 0 0 0 !important;
 }
 .dataTables_paginate,
 .dataTables_length,
@@ -12,4 +15,11 @@
 }
 .table-responsive {
 	overflow-x:auto;
+}
+.error{
+	color: red;
+}
+.app-inline {
+	display: inline-block;
+	padding: 5px;
 }

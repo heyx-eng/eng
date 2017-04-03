@@ -889,8 +889,7 @@ keyframes am-moving-dashes { 100% {
 	animation: am-pulsating 1s ease-out infinite;
 }
 
-@
--webkit-keyframes am-pulsating { 0% {
+@-webkit-keyframes am-pulsating { 0% {
 	stroke-opacity: 1;
 	stroke-width: 0px;
 }

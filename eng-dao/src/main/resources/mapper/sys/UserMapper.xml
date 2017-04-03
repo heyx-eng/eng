@@ -5,22 +5,27 @@
 	<!-- 通用查询映射结果 -->
 	<resultMap id="BaseResultMap" type="org.engdream.sys.entity.User">
 		<result column="username" property="username" />
+		<result column="nickname" property="nickname" />
+		<result column="avatar" property="avatar" />
 		<result column="password" property="password" />
 		<result column="salt" property="salt" />
 		<result column="role_ids" property="roleIds" />
-		<result column="is_locked" property="isLocked" />
-		<result column="nickname" property="nickname" />
-		<result column="avatar" property="avatar" />
+		<result column="locked" property="locked" />
+		<result column="deleted" property="deleted" />
 		<result column="email" property="email" />
 		<result column="mobile" property="mobile" />
 		<result column="qq" property="qq" />
 		<result column="wechat" property="wechat" />
-		<result column="is_delete" property="isDelete" />
 	</resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        username, password, salt, role_ids AS roleIds, is_locked AS isLocked, nickname, avatar, email, mobile, qq, wechat, is_delete AS isDelete
+	username, nickname, avatar, password, salt, role_ids AS roleIds, locked, deleted, email, mobile, qq, wechat
     </sql>
+
+	<!-- 逻辑删除 -->
+	<update id="markDelete" parameterType="java.io.Serializable">
+		UPDATE sys_user SET deleted=1 where id=#{id}
+	</update>
 
 </mapper>
