@@ -1,6 +1,7 @@
 package org.engdream.base.web.controller;
 
 import com.baomidou.mybatisplus.plugins.Page;
+
 import org.engdream.base.entity.BaseEntity;
 import org.engdream.base.service.BaseService;
 import org.engdream.base.web.annotation.SearchParam;
@@ -61,10 +62,6 @@ public abstract class BaseCRUDController<M extends BaseEntity<ID>, ID extends Se
 		setCommonDate(model);
 		M m = baseService.selectById(id);
 		model.addAttribute("m", m);
-		Map<String, String> test = new HashMap<>();
-		test.put("true", "是");
-		test.put("false", "否");
-		model.addAttribute("test", test);
 		model.addAttribute(OPERATOR, "update");
 		return viewName("edit");
 	}

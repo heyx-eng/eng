@@ -61,7 +61,7 @@
 					<artifactId>tomcat7-maven-plugin</artifactId>
 					<version>${tomcat.maven.version}</version>
 					<configuration>
-						<port>80</port>
+						<port>8080</port>
 						<path>/${project.build.finalName}</path>
 						<!-- spring profile -->
 						<systemProperties>

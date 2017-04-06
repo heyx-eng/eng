@@ -19,22 +19,22 @@
     <div class="main-content">
         <div class="table-container">
             <div class="table-edit-wrapper">
-                <shiro:hasPermission name="sys:user:create">
+                <shiro:hasPermission name="sys:role:create">
                 <button id="editable_create" class="btn sbold green"> 新建
                     <i class="glyphicon glyphicon-plus"></i>
                 </button>
                 </shiro:hasPermission>
-                <shiro:hasPermission name="sys:user:update">
+                <shiro:hasPermission name="sys:role:update">
                 <button id="editable_edit" class="btn sbold btn-success"> 编辑
                     <i class="glyphicon glyphicon-pencil"></i>
                 </button>
                 </shiro:hasPermission>
-                <shiro:hasPermission name="sys:user:delete">
+                <shiro:hasPermission name="sys:role:delete">
                 <button id="editable_delete" class="btn sbold btn-danger"> 删除
                     <i class="glyphicon glyphicon-minus"></i>
                 </button>
                 </shiro:hasPermission>
-                <shiro:hasPermission name="sys:user:review">
+                <shiro:hasPermission name="sys:role:review">
                 <div class="btn-group">
                     <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         审核 <span class="caret"></span>
@@ -65,18 +65,10 @@
                             <span></span>
                         </label>
                     </th>
-                    <th>用户名</th>
-                    <th>密码</th>
-                    <th></th>
                     <th>角色</th>
-                    <th>是否锁定</th>
-                    <th>昵称</th>
-                    <th>头像</th>
-                    <th>邮箱</th>
-                    <th>手机</th>
-                    <th>QQ</th>
-                    <th>微信</th>
-                    <th>是否删除</th>
+                    <th>描述</th>
+                    <th>资源</th>
+                    <th>是否可用</th>
                 </tr>
                 </thead>
                 <tbody></tbody>
@@ -90,21 +82,13 @@
 <script type="text/javascript">
     $(function () {
         TableDatatablesAjax.init({
-            baseurl: '${ctx}/sys/user/',
+            baseurl: '${ctx}/sys/role/',
             columns: [
                 {"data": "id"},
-                {"data": "username", "defaultContent": ""},
-                {"data": "password", "defaultContent": ""},
-                {"data": "salt", "defaultContent": ""},
-                {"data": "roleIds", "defaultContent": ""},
-                {"data": "locked", "defaultContent": ""},
-                {"data": "nickname", "defaultContent": ""},
-                {"data": "avatar", "defaultContent": ""},
-                {"data": "email", "defaultContent": ""},
-                {"data": "mobile", "defaultContent": ""},
-                {"data": "qq", "defaultContent": ""},
-                {"data": "wechat", "defaultContent": ""},
-                {"data": "deleted", "defaultContent": ""}
+                {"data": "role", "defaultContent": ""},
+                {"data": "description", "defaultContent": ""},
+                {"data": "resourceIds", "defaultContent": ""},
+                {"data": "available", "defaultContent": ""}
             ]
         });
     });

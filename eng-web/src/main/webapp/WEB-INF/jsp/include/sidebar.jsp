@@ -31,7 +31,6 @@
 			<ul class="premium-menu nav nav-list collapse">
 				<li class="visible-xs visible-sm">
 					<a href="#">- Premium features require a license -</a>
-					</span>
 					<li>
 						<a href="premium-profile.html"><span class="fa fa-caret-right"></span> Enhanced Profile</a>
 					</li>

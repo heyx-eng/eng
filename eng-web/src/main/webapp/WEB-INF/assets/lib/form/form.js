@@ -1,3 +1,20 @@
+function setIframeHeight(iframeId) {
+	var cwin = document.getElementById(iframeId);
+	if (document.getElementById) {
+		if (cwin && !window.opera) {
+			if (cwin.contentDocument
+					&& cwin.contentDocument.body.offsetHeight) {
+				cwin.height = cwin.contentDocument.body.offsetHeight + 20; //FF NS   
+			} else if (cwin.Document && cwin.Document.body.scrollHeight) {
+				cwin.height = cwin.Document.body.scrollHeight + 10;//IE   
+			}
+		} else {
+			if (cwin.contentWindow.document
+					&& cwin.contentWindow.document.body.scrollHeight)
+				cwin.height = cwin.contentWindow.document.body.scrollHeight;//Opera   
+		}
+	}
+};
 (function () {
     var Form = function ($this, options) {
         var defaults = {
@@ -69,8 +86,8 @@ $.validator.addMethod("code",function(value,element){
     var score = /^[0-9]{6}$/;
     return this.optional(element) || (score.test(value));
 },"请输入六位数字验证码");
-$.validator.addMethod("user",function(value,element){
-    var score = /^[a-zA-Z_]{6,15}$/;
+$.validator.addMethod("username",function(value,element){
+    var score = /^[a-zA-Z_].{6,15}$/;
     return this.optional(element) || (score.test(value));
 },"用户名只能以字母或下划线开头，长度为6-15位");
 $.validator.addMethod("pwd",function(value,element){
