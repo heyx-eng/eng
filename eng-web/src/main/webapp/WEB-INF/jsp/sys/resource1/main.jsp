@@ -1,5 +1,4 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@include file="/WEB-INF/jsp/include/tags.jsp"%>
 <!doctype html>
 <html lang="en" xmlns:form="http://www.w3.org/1999/html">
 <head>
@@ -18,7 +17,7 @@
 	}
 	</style>
 </head>
-<body>
+<body class=" theme-black">
 	<div class="row">
 	    <form:form action="${ctx}/sys/resource/update" cssClass="form-horizontal" id="editForm" commandName="m">
 	        <input id="_method" type="hidden" name="_method" value="put">

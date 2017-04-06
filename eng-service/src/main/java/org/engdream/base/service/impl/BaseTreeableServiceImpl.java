@@ -8,6 +8,7 @@ import com.google.common.collect.Sets;
 import org.engdream.base.entity.BaseEntity;
 import org.engdream.base.entity.Treeable;
 import org.engdream.base.service.BaseTreeableService;
+import org.engdream.sys.entity.Resource;
 
 import java.io.Serializable;
 import java.util.List;
@@ -236,5 +237,29 @@ public abstract class BaseTreeableServiceImpl<M extends BaseEntity<ID> & Treeabl
         wrapper.addFilter("id != ?", excludeM.getId());
         wrapper.addFilter("parent_ids not like", excludeM.makeSelfAsNewParentIds()+"%");
     }
+    
+    @Override
+	public List<M> findChildren(List<M> parents, Wrapper<M> wrapper) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<M> findRootAndChild(Wrapper<M> wrapper) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Set<ID> findAncestorIds(ID currentId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<M> findAncestor(String parentIds) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

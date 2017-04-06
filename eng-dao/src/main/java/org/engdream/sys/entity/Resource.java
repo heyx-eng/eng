@@ -4,14 +4,13 @@ import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
 import org.engdream.base.entity.BaseEntity;
 import org.engdream.base.entity.Treeable;
-
 /**
  * <p>
  * 资源
  * </p>
  *
  * @author Heyx
- * @since 2017-04-05
+ * @since 2017-04-06
  */
 @TableName("sys_resource")
 public class Resource extends BaseEntity<Long> implements Treeable<Long> {
@@ -109,15 +108,14 @@ public class Resource extends BaseEntity<Long> implements Treeable<Long> {
 	public void setAvailable(Boolean available) {
 		this.available = available;
 	}
-
 	@Override
 	public String getIcon() {
-		// TODO Auto-generated method stub
 		return "";
 	}
 
 	@Override
 	public void setIcon(String icon) {
+		// TODO Auto-generated method stub
 		
 	}
 
@@ -128,19 +126,18 @@ public class Resource extends BaseEntity<Long> implements Treeable<Long> {
 
 	@Override
 	public String makeSelfAsNewParentIds() {
-		return getParentIds()+getId()+"/";
+		return getParentIds()+getId()+getSeparator();
 	}
 
 	@Override
 	public boolean isRoot() {
-		if (getParentId() != null && getParentId() == 0) {
-            return true;
-        }
-        return false;
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 	@Override
 	public boolean isLeaf() {
+		// TODO Auto-generated method stub
 		return false;
 	}
 

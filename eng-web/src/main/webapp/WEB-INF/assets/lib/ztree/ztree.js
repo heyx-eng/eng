@@ -111,6 +111,7 @@
                 dataType: 'json',
                 method: 'post',
                 success: function(response) {
+                	alert("ID:"+response.id);
                     var newNode = response;
                     var node = { 
                 		id:newNode.id, 

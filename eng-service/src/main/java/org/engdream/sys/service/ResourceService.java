@@ -9,8 +9,7 @@ import org.engdream.base.service.BaseTreeableService;
     * </p>
 *
 * @author Heyx
-* @since 2017-04-05
+* @since 2017-04-06
 */
 public interface ResourceService extends BaseTreeableService<Resource, Long> {
-    void markDelete(Long id);
 }

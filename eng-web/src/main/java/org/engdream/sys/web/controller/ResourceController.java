@@ -19,14 +19,14 @@ import org.engdream.sys.web.enums.ResourceType;
  * </p>
  *
  * @author Heyx
- * @since 2017-04-05
+ * @since 2017-04-06
  */
 @Controller
 @RequestMapping("sys/resource")
 public class ResourceController extends BaseTreeableController<Resource, Long> {
 
     private ResourceService getResourceService(){
-        return (ResourceService)baseTreeableService;
+    	return (ResourceService)baseTreeableService;
     }
 	@Override
 	protected String getResourcePrefix() {
@@ -38,18 +38,17 @@ public class ResourceController extends BaseTreeableController<Resource, Long> {
 		model.addAttribute("booleanList", BooleanEnum.values());
 		super.setCommonDate(model);
 	}
-	
 	@RequestMapping(value = "appendChild", method = RequestMethod.POST)
-    public ResponseEntity<Resource> appendChild(Long parentId) {
+	public ResponseEntity<Resource> appendChild(Long parentId) {
 		Resource child = new Resource();
-		Resource parent = baseTreeableService.selectById(parentId);
-        child.setName("新节点");
-        child.setType(ResourceType.MENU.getInfo());
-        child.setAvailable(true);
-        child.setCreateTime(new Date());
-        child.setModifiedTime(new Date());
-        child.setPermission("1,2,3,");
-        baseTreeableService.appendChild(parent, child);
-        return ResponseEntity.ok(child);
-    }
+		child.setCreateTime(new Date());
+		child.setModifiedTime(new Date());
+		child.setType(ResourceType.MENU.getInfo());
+		child.setAvailable(true);
+		child.setPermission("");
+		Resource parent = getResourceService().selectById(parentId);
+		child.setName("新节点");
+		getResourceService().appendChild(parent, child);
+		return ResponseEntity.ok(child);
+	}
 }

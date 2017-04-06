@@ -37,6 +37,9 @@
 
 		var ztree = $("#ztree").tree({
             baseUrl: '${ctx }/sys/resource',
+            check: {
+            	enable: true
+            },
             edit: {
                 enable: true
             }
