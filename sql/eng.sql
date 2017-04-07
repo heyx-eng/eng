@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50548
 File Encoding         : 65001
 
-Date: 2017-04-06 12:17:32
+Date: 2017-04-07 10:14:43
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -154,7 +154,7 @@ CREATE TABLE `sys_resource` (
   PRIMARY KEY (`id`),
   KEY `idx_sys_resource_parent_id` (`parent_id`),
   KEY `idx_sys_resource_parent_ids` (`parent_ids`)
-) ENGINE=InnoDB AUTO_INCREMENT=849556893016412161 DEFAULT CHARSET=utf8 COMMENT='资源';
+) ENGINE=InnoDB AUTO_INCREMENT=849912024056999942 DEFAULT CHARSET=utf8 COMMENT='资源';
 
 -- ----------------------------
 -- Records of sys_resource
@@ -185,11 +185,10 @@ INSERT INTO `sys_resource` VALUES ('47', 'URL新增', 'button', '', '0', '46', '
 INSERT INTO `sys_resource` VALUES ('48', 'URL修改', 'button', '', '0', '46', '0/1/46/', 'urlFilter:update', '', null, null);
 INSERT INTO `sys_resource` VALUES ('49', 'URL删除', 'button', '', '0', '46', '0/1/46/', 'urlFilter:delete', '', null, null);
 INSERT INTO `sys_resource` VALUES ('50', 'URL查看', 'button', '', '0', '46', '0/1/46/', 'urlFilter:view', '', null, null);
-INSERT INTO `sys_resource` VALUES ('849548467029262336', '新节点', '', null, '0', '12', '0/1/11//', '', '\0', null, null);
-INSERT INTO `sys_resource` VALUES ('849548788560412672', '新节点', '', null, '1', '12', '0/1/11//', '', '\0', null, null);
-INSERT INTO `sys_resource` VALUES ('849556454514511872', '新节点', '菜单', null, '4', '21', '0/1/21/', '1,2,3,', '', '2017-04-05 17:36:57', '2017-04-05 17:36:57');
-INSERT INTO `sys_resource` VALUES ('849556748036100096', '新节点', '菜单', null, '5', '21', '0/1/21/', '1,2,3,', '', '2017-04-05 17:38:07', '2017-04-05 17:38:07');
-INSERT INTO `sys_resource` VALUES ('849556893016412160', '新节点', '菜单', null, '4', '11', '0/1/11/', '1,2,3,', '', '2017-04-05 17:38:41', '2017-04-05 17:38:41');
+INSERT INTO `sys_resource` VALUES ('849912024056999938', '新节点', '菜单', null, '4', '46', '0/1/46/', '', '', '2017-04-06 17:31:34', '2017-04-06 17:31:34');
+INSERT INTO `sys_resource` VALUES ('849912024056999939', '新节点', '菜单', null, '5', '46', '0/1/46/', '', '', '2017-04-06 17:38:31', '2017-04-06 17:38:31');
+INSERT INTO `sys_resource` VALUES ('849912024056999940', '新节点', '菜单', null, '6', '46', '0/1/46/', '', '', '2017-04-06 17:54:46', '2017-04-06 17:54:46');
+INSERT INTO `sys_resource` VALUES ('849912024056999941', '新节点', '菜单', null, '7', '46', '0/1/46/', '', '', '2017-04-06 18:02:04', '2017-04-06 18:02:04');
 
 -- ----------------------------
 -- Table structure for sys_role
