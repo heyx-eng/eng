@@ -6,11 +6,11 @@ import org.engdream.base.entity.BaseEntity;
 
 /**
  * <p>
- * 用户信息
+ * 
  * </p>
  *
  * @author Heyx
- * @since 2017-04-03
+ * @since 2017-04-05
  */
 @TableName("sys_user")
 public class User extends BaseEntity<Long> {
@@ -18,19 +18,11 @@ public class User extends BaseEntity<Long> {
     private static final long serialVersionUID = 1L;
 
     /**
-     * label:用户名;type:input;valid:required
+     * label:用户名;type:input;valid:username
      */
 	private String username;
     /**
-     * label:昵称;type:input;valid:required
-     */
-	private String nickname;
-    /**
-     * label:头像;type:image;valid:required
-     */
-	private String avatar;
-    /**
-     * label:密码;type:password;valid:required
+     * label:密码;type:password;valid:pwd
      */
 	private String password;
     /**
@@ -38,7 +30,7 @@ public class User extends BaseEntity<Long> {
      */
 	private String salt;
     /**
-     * label:角色;type:muilty-select;valid:required
+     * label:角色;type:checkbox;valid:required
      */
 	@TableField("role_ids")
 	private String roleIds;
@@ -47,25 +39,33 @@ public class User extends BaseEntity<Long> {
      */
 	private Boolean locked;
     /**
-     * label:是否删除;type:radio;valid:required
+     * label:昵称;type:input
      */
-	private Boolean deleted;
+	private String nickname;
     /**
-     * label:邮箱;type:input;valid:required
+     * label:头像;type:image;valid:required
+     */
+	private String avatar;
+    /**
+     * label:邮箱;type:input;valid:email
      */
 	private String email;
     /**
-     * label:手机;type:input;valid:mobile
+     * label:手机;type:input;valid:phone
      */
 	private String mobile;
     /**
-     * label:QQ;type:input
+     * label:QQ;type:input;valid:qq
      */
 	private String qq;
     /**
      * label:微信;type:input
      */
 	private String wechat;
+    /**
+     * label:是否删除;type:radio;valid:required
+     */
+	private Boolean deleted;
 
 	public String getUsername() {
         return username;
@@ -73,20 +73,6 @@ public class User extends BaseEntity<Long> {
 
 	public void setUsername(String username) {
 		this.username = username;
-	}
-	public String getNickname() {
-        return nickname;
-	}
-
-	public void setNickname(String nickname) {
-		this.nickname = nickname;
-	}
-	public String getAvatar() {
-        return avatar;
-	}
-
-	public void setAvatar(String avatar) {
-		this.avatar = avatar;
 	}
 	public String getPassword() {
         return password;
@@ -116,12 +102,19 @@ public class User extends BaseEntity<Long> {
 	public void setLocked(Boolean locked) {
 		this.locked = locked;
 	}
-	public Boolean getDeleted() {
-        return deleted;
+	public String getNickname() {
+        return nickname;
 	}
 
-	public void setDeleted(Boolean deleted) {
-		this.deleted = deleted;
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
+	public String getAvatar() {
+        return avatar;
+	}
+
+	public void setAvatar(String avatar) {
+		this.avatar = avatar;
 	}
 	public String getEmail() {
         return email;
@@ -150,6 +143,13 @@ public class User extends BaseEntity<Long> {
 
 	public void setWechat(String wechat) {
 		this.wechat = wechat;
+	}
+	public Boolean getDeleted() {
+        return deleted;
+	}
+
+	public void setDeleted(Boolean deleted) {
+		this.deleted = deleted;
 	}
 
 }

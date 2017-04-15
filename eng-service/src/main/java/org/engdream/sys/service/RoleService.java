@@ -1,6 +1,6 @@
 package org.engdream.sys.service;
 
-import org.engdream.sys.entity.User;
+import org.engdream.sys.entity.Role;
 import org.engdream.base.service.BaseService;
 
 /**
@@ -11,6 +11,6 @@ import org.engdream.base.service.BaseService;
 * @author Heyx
 * @since 2017-04-05
 */
-public interface UserService extends BaseService<User, Long> {
+public interface RoleService extends BaseService<Role, Long> {
     void markDelete(Long id);
 }

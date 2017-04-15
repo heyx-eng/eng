@@ -71,119 +71,42 @@
         }
     };
 
-    var ZTree = function(ztreeObj, opts){
-        var defaults = {
-            async: {
-                enable: true,
-                url: opts.baseUrl+"/tree",
-                autoParam: ["id"],
-                otherParam: {},
-                dataFilter: null
-            },
-            view: {
-                expandSpeed: "",
-                selectedMulti: false,
-                addHoverDom: addHoverDom,
-                removeHoverDom: removeHoverDom
-            },
-            edit: {
-                enable: true
-            },
-            data: {
-                simpleData: {
-                    enable: true
-                }
-            },
-            check: {
-                chkboxType: {
-                    "Y": "ps",
-                    "N": "ps"
-                },
-                enable: false,
-                autoCheckTrigger: true
-            },
-            callback: {
-                beforeRemove: beforeRemove,
-                onRemove: zTreeOnRemove,
-                onClick: zTreeOnClick
-            },
-            baseUrl: ''
-        };
-        var setting = $.extend({}, defaults, opts);
-        function zTreeOnClick(event, treeId, treeNode) {
-            $.waiting("show");
-            $.ajax({
-                url: opts.baseUrl+"/get?id="+treeNode.id,
-                type:"get",
-                dataType:"json",
-                success: function(data){
-                    $.waiting("hide");
-                    if(opts.onClick){
-                        opts.onClick(data);
-                    }
-                }
-            });
-        };
-
-        function filter(treeId, parentNode, childNodes) {
-            if (!childNodes) return null;
-            for (var i=0, l=childNodes.length; i<l; i++) {
-                childNodes[i].name = childNodes[i].name.replace(/\.n/g, '.');
+    var Iframe = {
+    	onload: function(id, callback){
+    		var iframe = document.getElementById(id);   
+            if (iframe.attachEvent) {      
+                iframe.attachEvent("onload", function() {
+                	alert(1);
+                	callback();
+                });      
+            } else {      
+                iframe.onload = function() {   
+                	alert(2);
+                	callback();
+                };      
             }
-            return childNodes;
-        }
-        function beforeRemove(treeId, treeNode) {
-            var ztree = $.fn.zTree.getZTreeObj(treeId);
-            ztree.selectNode(treeNode);
-            return confirm("确认删除 节点 -- " + treeNode.name + " 吗？");
-        }
-        function zTreeOnRemove(event, treeId, treeNode){
-            var url = opts.baseUrl+"/delete?id="+treeNode.id;
-            $.getJSON(url, function(dt) {
-            });
-        }
-        function addHoverDom(treeId, treeNode) {
-            var sObj = $("#" + treeNode.tId + "_span");
-            if (treeNode.editNameFlag || $("#addBtn_"+treeNode.tId).length>0) return;
-            var addStr = "<span class='button add' id='addBtn_" + treeNode.tId
-                + "' title='add node' onfocus='this.blur();'></span>";
-            sObj.after(addStr);
-            var btn = $("#addBtn_"+treeNode.tId);
-            if (btn) btn.bind("click", function(){
-                onAdd(treeId, treeNode);
-                return false;
-            });
-        };
-        /**
-         * 添加新节点
-         * @param e
-         * @param treeId
-         * @param treeNode
-         */
-        function onAdd(treeId, treeNode) {
-            var ztree = $.fn.zTree.getZTreeObj(treeId);
-            var url = opts.baseUrl+"/appendChild?parentId="+treeNode.id;
-            $.ajax({
-                url: url,
-                dataType: 'json',
-                method: 'post',
-                success: function(response) {
-                    var newNode = response.data;
-                    var node = { id:newNode.id, pId:newNode.pId, name:newNode.name, iconSkin:newNode.iconSkin, open: true,
-                        click : newNode.click, root :newNode.root,isParent:newNode.isParent};
-                    var newNode = ztree.addNodes(treeNode, node)[0];
-                    //                zTree.selectNode(newNode);
-                    $("#" + newNode.tId + "_a").click();
-                }
-            });
-        }
-        function removeHoverDom(treeId, treeNode) {
-            $("#addBtn_"+treeNode.tId).unbind().remove();
-        };
-        return $.fn.zTree.init(ztreeObj, setting);
+    	},
+    	fillHeight: function(iframeId){
+    		Iframe.onload(iframeId, function(){
+    			var cwin = document.getElementById(iframeId);
+        		if (document.getElementById) {
+        			if (cwin && !window.opera) {
+        				if (cwin.contentDocument
+        						&& cwin.contentDocument.body.offsetHeight) {
+        					cwin.height = cwin.contentDocument.body.offsetHeight + 20; //FF NS   
+        				} else if (cwin.Document && cwin.Document.body.scrollHeight) {
+        					cwin.height = cwin.Document.body.scrollHeight + 10;//IE   
+        				}
+        			} else {
+        				if (cwin.contentWindow.document
+        						&& cwin.contentWindow.document.body.scrollHeight)
+        					cwin.height = cwin.contentWindow.document.body.scrollHeight;//Opera   
+        			}
+        		}
+    		});
+    	}
     };
-    $.fn.tree = function(opts){
-        return new ZTree($(this), opts);
-    };
-
+    $.iframe = function(id){
+    	return Iframe.fillHeight(id);
+    }
 });

@@ -90,7 +90,7 @@
 		<!-- 主键策略配置 -->
 		<!-- 可选参数 AUTO->`0`("数据库ID自增") INPUT->`1`(用户输入ID") ID_WORKER->`2`("全局唯一ID") 
 			UUID->`3`("全局唯一ID") -->
-		<property name="idType" value="2" />
+		<property name="idType" value="0" />
 		<!-- 数据库类型配置 -->
 		<!-- 可选参数（默认mysql） MYSQL->`mysql` ORACLE->`oracle` DB2->`db2` H2->`h2` 
 			HSQL->`hsql` SQLITE->`sqlite` POSTGRE->`postgresql` SQLSERVER2005->`sqlserver2005` 

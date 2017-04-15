@@ -3,7 +3,7 @@
 <html lang="en" xmlns:form="http://www.w3.org/1999/html">
 <head>
     <meta charset="utf-8">
-    <title>ENG-用户信息</title>
+    <title>ENG-</title>
     <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -29,20 +29,49 @@
                     <div class="form-body">
                         <div class="form-group">
                             <label class="control-label col-md-3">用户名
+                            </label>
+                            <div class="col-md-4">
+                                <form:input path="username" cssClass="form-control username" />
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-3">密码
+                            </label>
+                            <div class="col-md-4">
+                                <form:password path="password" cssClass="form-control pwd" />
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+
+                        <form:hidden path="salt"/>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-3">角色
                                 <span class="required"> * </span>
                             </label>
                             <div class="col-md-4">
-                                <form:input path="username" cssClass="form-control required" />
+                                <form:checkboxes path="roleIds" items="${roles}" cssClass="required" element="div class=\"app-inline\""/>
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-3">是否锁定
+                                <span class="required"> * </span>
+                            </label>
+                            <div class="col-md-4">
+                                <form:radiobuttons path="locked" items="${booleanList}" itemLabel="info" element="div class=\"app-inline\""/>
                                 <span class="help-block"></span>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label class="control-label col-md-3">昵称
-                                <span class="required"> * </span>
                             </label>
                             <div class="col-md-4">
-                                <form:input path="nickname" cssClass="form-control required" />
+                                <form:input path="nickname" cssClass="form-control " />
                                 <span class="help-block"></span>
                             </div>
                         </div>
@@ -52,7 +81,7 @@
                                 <span class="required"> * </span>
                             </label>
                             <div id="uploader" class="col-md-3">
-                                <form:hidden path="avatar" cssClass="required"/>
+                                <form:hidden path="avatar"/>
                                 <!--用来存放文件信息-->
                                 <div id="thelist" class="uploader-list">
                                 <c:if test="${avatar ne ''}">
@@ -67,44 +96,10 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="control-label col-md-3">密码
-                                <span class="required"> * </span>
-                            </label>
-                            <div class="col-md-4">
-                                <form:password path="password" cssClass="form-control required" />
-                                <span class="help-block"></span>
-                            </div>
-                        </div>
-
-                        <form:hidden path="salt"/>
-
-
-                        <div class="form-group">
-                            <label class="control-label col-md-3">是否锁定
-                                <span class="required"> * </span>
-                            </label>
-                            <div class="col-md-4">
-                                <form:radiobuttons path="locked" items="${test}" element="div class=\"app-inline\""/>
-                                <span class="help-block"></span>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="control-label col-md-3">是否删除
-                                <span class="required"> * </span>
-                            </label>
-                            <div class="col-md-4">
-                                <form:radiobuttons path="deleted" items="${test}" element="div class=\"app-inline\""/>
-                                <span class="help-block"></span>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
                             <label class="control-label col-md-3">邮箱
-                                <span class="required"> * </span>
                             </label>
                             <div class="col-md-4">
-                                <form:input path="email" cssClass="form-control required" />
+                                <form:input path="email" cssClass="form-control email" />
                                 <span class="help-block"></span>
                             </div>
                         </div>
@@ -113,7 +108,7 @@
                             <label class="control-label col-md-3">手机
                             </label>
                             <div class="col-md-4">
-                                <form:input path="mobile" cssClass="form-control mobile" />
+                                <form:input path="mobile" cssClass="form-control phone" />
                                 <span class="help-block"></span>
                             </div>
                         </div>
@@ -122,7 +117,7 @@
                             <label class="control-label col-md-3">QQ
                             </label>
                             <div class="col-md-4">
-                                <form:input path="qq" cssClass="form-control " />
+                                <form:input path="qq" cssClass="form-control qq" />
                                 <span class="help-block"></span>
                             </div>
                         </div>
@@ -132,6 +127,16 @@
                             </label>
                             <div class="col-md-4">
                                 <form:input path="wechat" cssClass="form-control " />
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-3">是否删除
+                                <span class="required"> * </span>
+                            </label>
+                            <div class="col-md-4">
+                                <form:radiobuttons path="deleted" cssClass="" items="${booleanList}" itemLabel="info" element="div class=\"app-inline\""/>
                                 <span class="help-block"></span>
                             </div>
                         </div>
@@ -161,15 +166,15 @@
 <script type="text/javascript">
     $(function() {
         $("#editForm").submitForm();
-
+        
+        $("#backBtn").on("click", function () {
+            location.href = '${ctx}/sys/user/page/list';
+        });
+        
         $.fileupload({
             onSuccess: function (response) {
                 $("#avatar").val(response);
             }
-        });
-
-        $("#backBtn").on("click", function () {
-            location.href = '${ctx}/sys/user/page/list';
         });
     });
 </script>
