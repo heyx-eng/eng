@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
 import org.engdream.base.entity.BaseEntity;
 
+import java.util.List;
+
 /**
  * <p>
  * 
@@ -28,12 +30,12 @@ public class Role extends BaseEntity<Long> {
     /**
      * label:资源;type:tree
      */
-	@TableField("resource_ids")
-	private String resourceIds;
+	@TableField(value="resource_ids", el = "resourceIds,typeHandler=org.engdream.base.type.String2LongHandler")
+	private List<Long> resourceIds;
     /**
      * label:是否可用;type:radio;valid:required
      */
-	private Integer available;
+	private Boolean available;
 
 	public String getRole() {
         return role;
@@ -49,18 +51,20 @@ public class Role extends BaseEntity<Long> {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	public String getResourceIds() {
-        return resourceIds;
+
+	public List<Long> getResourceIds() {
+		return resourceIds;
 	}
 
-	public void setResourceIds(String resourceIds) {
+	public void setResourceIds(List<Long> resourceIds) {
 		this.resourceIds = resourceIds;
 	}
-	public Integer getAvailable() {
+
+	public Boolean getAvailable() {
         return available;
 	}
 
-	public void setAvailable(Integer available) {
+	public void setAvailable(Boolean available) {
 		this.available = available;
 	}
 

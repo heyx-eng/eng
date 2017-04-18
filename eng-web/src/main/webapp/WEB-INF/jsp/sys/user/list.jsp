@@ -11,12 +11,7 @@
     <%@include file="/WEB-INF/jsp/ref/core-css.jsp"%>
     <%@include file="/WEB-INF/jsp/ref/plugin-datatable-css.jsp"%>
 </head>
-<body class=" theme-black">
-<%@include file="/WEB-INF/jsp/include/nav.jsp"%>
-<%@include file="/WEB-INF/jsp/include/sidebar.jsp"%>
-<div class="content">
-    <%@include file="/WEB-INF/jsp/include/header.jsp"%>
-    <div class="main-content">
+<body>
         <div class="table-container">
             <div class="table-edit-wrapper">
                 <shiro:hasPermission name="sys:user:create">
@@ -83,9 +78,6 @@
                 <tbody></tbody>
             </table>
         </div>
-        <%@include file="/WEB-INF/jsp/include/footer.jsp"%>
-    </div>
-</div>
 <%@include file="/WEB-INF/jsp/ref/core-js.jsp"%>
 <%@include file="/WEB-INF/jsp/ref/plugin-datatable-js.jsp"%>
 <script type="text/javascript">

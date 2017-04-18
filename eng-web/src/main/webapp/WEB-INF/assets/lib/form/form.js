@@ -1,20 +1,3 @@
-function setIframeHeight(iframeId) {
-	var cwin = document.getElementById(iframeId);
-	if (document.getElementById) {
-		if (cwin && !window.opera) {
-			if (cwin.contentDocument
-					&& cwin.contentDocument.body.offsetHeight) {
-				cwin.height = cwin.contentDocument.body.offsetHeight + 20; //FF NS   
-			} else if (cwin.Document && cwin.Document.body.scrollHeight) {
-				cwin.height = cwin.Document.body.scrollHeight + 10;//IE   
-			}
-		} else {
-			if (cwin.contentWindow.document
-					&& cwin.contentWindow.document.body.scrollHeight)
-				cwin.height = cwin.contentWindow.document.body.scrollHeight;//Opera   
-		}
-	}
-};
 (function () {
     var Form = function ($this, options) {
         var defaults = {
@@ -31,18 +14,19 @@ function setIframeHeight(iframeId) {
                     beforeSubmit: function() {
                         $.waiting("show");
                         $(".submit-btn").attr("disabled", true);
-                        if(settings.onSuccess){
-                            settings.onSuccess();
-                        }
                     },
                     success: function(response) {
                         $(".submit-btn").removeAttr("disabled");
                         $.waiting("hide");
-                        alert(response);
                         //清除隐藏域  --> true
                         $(form).clearForm(true);
-                        $("#_method").val("post");
-                        $(form).prop("action", $(form).prop("action").replace("update", "create"));
+                        if(settings.onSuccess){
+                            settings.onSuccess();
+                        } else{
+                            alert(response);
+                            $("#_method").val("post");
+                            $(form).prop("action", $(form).prop("action").replace("update", "create"));
+                        }
                     },
                     error: function(e){
                         $.waiting("hide");
@@ -87,10 +71,10 @@ $.validator.addMethod("code",function(value,element){
     return this.optional(element) || (score.test(value));
 },"请输入六位数字验证码");
 $.validator.addMethod("username",function(value,element){
-    var score = /^[a-zA-Z_].{6,15}$/;
+    var score = /^[a-zA-Z_].{5,14}$/;
     return this.optional(element) || (score.test(value));
 },"用户名只能以字母或下划线开头，长度为6-15位");
 $.validator.addMethod("pwd",function(value,element){
-    var score = /^[a-zA-Z_0-9]{6,}$/;
+    var score = /.{6,}$/;
     return this.optional(element) || (score.test(value));
 },"密码长度至少为6位");

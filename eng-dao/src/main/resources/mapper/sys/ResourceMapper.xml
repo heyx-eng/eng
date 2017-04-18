@@ -6,17 +6,18 @@
 	<resultMap id="BaseResultMap" type="org.engdream.sys.entity.Resource">
 		<result column="name" property="name" />
 		<result column="type" property="type" />
+		<result column="icon" property="icon" />
 		<result column="url" property="url" />
 		<result column="weight" property="weight" />
 		<result column="parent_id" property="parentId" />
 		<result column="parent_ids" property="parentIds" />
-		<result column="permission" property="permission" />
+		<result column="identity" property="identity" />
 		<result column="available" property="available" />
 	</resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-	name, type, url, weight, parent_id AS parentId, parent_ids AS parentIds, permission, available
+	name, type, url, weight, parent_id AS parentId, parent_ids AS parentIds, icon, identity AS identity, available
     </sql>
 
 </mapper>

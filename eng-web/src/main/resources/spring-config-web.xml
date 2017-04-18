@@ -69,6 +69,7 @@
         </mvc:message-converters>
         <mvc:argument-resolvers>
             <bean class="org.engdream.base.web.annotation.support.SearchParamMethodArgumentResolver"/>
+            <bean class="org.engdream.base.web.annotation.support.CurrentUserMethodArgumentResolver"/>
         </mvc:argument-resolvers>
         
 

@@ -53,6 +53,7 @@
 
 	<bean id="sqlSessionFactory"
 		class="com.baomidou.mybatisplus.spring.MybatisSqlSessionFactoryBean">
+		<property name="typeHandlersPackage" value="org.engdream.base.type"/>
 		<!-- 配置数据源 -->
 		<property name="dataSource" ref="dataSourceProxy" />
 		<!-- 自动扫描 Xml 文件位置 -->

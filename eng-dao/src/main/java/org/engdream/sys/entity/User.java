@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
 import org.engdream.base.entity.BaseEntity;
 
+import java.util.List;
+
 /**
  * <p>
  * 
@@ -32,8 +34,8 @@ public class User extends BaseEntity<Long> {
     /**
      * label:角色;type:checkbox;valid:required
      */
-	@TableField("role_ids")
-	private String roleIds;
+	@TableField(value="role_ids", el = "roleIds,typeHandler=org.engdream.base.type.String2LongHandler")
+	private List<Long> roleIds;
     /**
      * label:是否锁定;type:radio;valid:required
      */
@@ -88,13 +90,15 @@ public class User extends BaseEntity<Long> {
 	public void setSalt(String salt) {
 		this.salt = salt;
 	}
-	public String getRoleIds() {
-        return roleIds;
+
+	public List<Long> getRoleIds() {
+		return roleIds;
 	}
 
-	public void setRoleIds(String roleIds) {
+	public void setRoleIds(List<Long> roleIds) {
 		this.roleIds = roleIds;
 	}
+
 	public Boolean getLocked() {
         return locked;
 	}
@@ -152,4 +156,8 @@ public class User extends BaseEntity<Long> {
 		this.deleted = deleted;
 	}
 
+
+    public String getCredentialsSalt() {
+        return getUsername()+getSalt();
+    }
 }

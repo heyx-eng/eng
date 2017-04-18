@@ -104,7 +104,6 @@
          * @param treeNode
          */
         function onAdd(treeId, treeNode) {
-        	alert(treeNode.id.toString());
             var ztree = $.fn.zTree.getZTreeObj(treeId);
             var url = opts.baseUrl+"/appendChild?parentId="+treeNode.id;
             $.ajax({
@@ -112,7 +111,6 @@
                 dataType: 'json',
                 method: 'post',
                 success: function(response) {
-                	alert("ID:"+response.id);
                     var newNode = response;
                     var node = { 
                 		id:newNode.id, 

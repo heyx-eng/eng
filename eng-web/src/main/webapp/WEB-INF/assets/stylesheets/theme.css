@@ -364,7 +364,7 @@ footer hr {
 	box-shadow: 1px 1px 0px #ffffff;
 }
 
-.panel .panel-heading {
+/*.panel .panel-heading {
 	border-bottom: 1px solid #ccc;
 	border-left: none;
 	color: #333;
@@ -382,7 +382,7 @@ footer hr {
 	filter: progid: dximagetransform.microsoft.gradient(startColorStr='#e3e3e3', EndColorStr='#ffffff');
 	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#fafafa',EndColorStr='#efefef')";
 	box-shadow: inset 0px 1px 1px white;
-}
+}*/
 
 .panel .panel-heading:not(.no-collapse):hover {
 	background: #efefef;

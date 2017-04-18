@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@include file="/WEB-INF/jsp/include/tags.jsp"%>
 <!doctype html>
-<html lang="en" xmlns:form="http://www.w3.org/1999/html">
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <title>ENG-资源</title>
@@ -34,12 +34,20 @@
 	                        <span class="help-block"></span>
 	                    </div>
 	                </div>
+					<div class="form-group">
+						<label class="control-label col-md-3"> 图标
+						</label>
+						<div class="col-md-4">
+							<form:input path="icon" cssClass="form-control" />
+							<span class="help-block"></span>
+						</div>
+					</div>
 	                <div class="form-group">
 	                    <label class="control-label col-md-3">资源类型
 	                        <span class="required"> * </span>
 	                    </label>
 	                    <div class="col-md-4">
-	                        <form:select path="type" cssClass="form-control required"/>
+	                        <form:select path="type" items="${resourceTypeList}" itemLabel="info" cssClass="form-control required"/>
 	                        <span class="help-block"></span>
 	                    </div>
 	                </div>
@@ -63,7 +71,7 @@
 	                    <label class="control-label col-md-3">父节点
 	                    </label>
 	                    <div class="col-md-4">
-	                        <form:input path="parentId" cssClass="form-control " />
+	                        <form:input path="parentId" cssClass="form-control " readonly="true"/>
 	                        <span class="help-block"></span>
 	                    </div>
 	                </div>
@@ -71,7 +79,7 @@
 	                    <label class="control-label col-md-3">路径
 	                    </label>
 	                    <div class="col-md-4">
-	                        <form:input path="parentIds" cssClass="form-control " />
+	                        <form:input path="parentIds" cssClass="form-control " readonly="true"/>
 	                        <span class="help-block"></span>
 	                    </div>
 	                </div>
@@ -80,7 +88,7 @@
 	                        <span class="required"> * </span>
 	                    </label>
 	                    <div class="col-md-4">
-	                        <form:select path="permission" cssClass="form-control required"/>
+	                        <form:select path="identity" items="${permissionList}" itemLabel="name" itemValue="id" cssClass="form-control required"/>
 	                        <span class="help-block"></span>
 	                    </div>
 	                </div>

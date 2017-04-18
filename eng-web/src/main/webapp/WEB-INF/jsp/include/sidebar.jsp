@@ -1,16 +1,29 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <div class="sidebar-nav">
 	<ul>
-		<li>
-			<a href="#" data-target=".dashboard-menu" class="nav-header" data-toggle="collapse"><i class="fa fa-fw fa-dashboard"></i> Dashboard<i class="fa fa-collapse"></i></a>
-		</li>
-		<li>
+		<c:forEach items="${menu}" var="menuItem">
+			<li>
+				<a href="javascript:void(0);" data-target=".menu-${menuItem.id}" class="nav-header collapsed" data-toggle="collapse"><i class="${menuItem.icon}"></i> ${menuItem.name}<i class="fa fa-collapse"></i></a>
+			</li>
+			<li>
+				<ul class="menu-${menuItem.id} nav nav-list collapse">
+				<c:forEach items="${menuItem.children}" var="subMenu">
+					<li>
+						<a href="${subMenu.url}" target="mainFrame"><span class="${subMenu.icon}"></span> ${subMenu.name}</a>
+					</li>
+				</c:forEach>
+				</ul>
+			</li>
+		</c:forEach>
+
+		<%--<li>
 			<ul class="dashboard-menu nav nav-list collapse in">
 				<li>
 					<a href="index.html"><span class="fa fa-caret-right"></span> Main</a>
 				</li>
 				<li class="active">
-					<a href="users.html"><span class="fa fa-caret-right"></span> User List</a>
+					<a href="${ctx}/sys/user/page/list" target="mainFrame"><span class="fa fa-caret-right"></span> 用户列表</a>
 				</li>
 				<li>
 					<a href="user.html"><span class="fa fa-caret-right"></span> User Profile</a>
@@ -109,6 +122,6 @@
 			</li>
 			<li>
 				<a href="http://portnine.com/bootstrap-themes/aircraft" class="nav-header" target="blank"><i class="fa fa-fw fa-heart"></i> Get Premium</a>
-			</li>
+			</li>--%>
 	</ul>
 </div>

@@ -18,7 +18,7 @@ import java.io.Serializable;
 
 public abstract class BaseController<M extends BaseEntity<ID>, ID extends Serializable> {
 	protected static final String PERMS_VIEW = "view";
-	protected static final String PERMS_REVIEW = "review";
+	protected static final String PERMS_AUDIT = "audit";
 	protected static final String PERMS_CREATE = "create";
 	protected static final String PERMS_UPDATE = "update";
 	protected static final String PERMS_DELETE = "delete";
@@ -38,20 +38,21 @@ public abstract class BaseController<M extends BaseEntity<ID>, ID extends Serial
     protected void setCommonDate(Model model){
 
     }
+
     /**
      * 当前模块 视图的前缀
      * 默认
      * 1、获取当前类头上的@RequestMapping中的value作为前缀
      * 2、如果没有就使用当前模型小写的简单类名
      */
-    public void setViewPrefix(String viewPrefix) {
+    protected void setViewPrefix(String viewPrefix) {
         if (viewPrefix.startsWith("/")) {
             viewPrefix = viewPrefix.substring(1);
         }
         this.viewPrefix = viewPrefix;
     }
 
-    public String getViewPrefix() {
+    protected String getViewPrefix() {
         return viewPrefix;
     }
 
@@ -68,7 +69,7 @@ public abstract class BaseController<M extends BaseEntity<ID>, ID extends Serial
      *
      * @return
      */
-    public String viewName(String suffixName) {
+    protected String viewName(String suffixName) {
         if (!suffixName.startsWith("/")) {
             suffixName = "/" + suffixName;
         }

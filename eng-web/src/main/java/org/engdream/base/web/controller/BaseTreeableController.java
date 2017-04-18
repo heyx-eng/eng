@@ -1,7 +1,6 @@
 package org.engdream.base.web.controller;
 
 import com.google.common.collect.Lists;
-
 import org.engdream.base.entity.BaseEntity;
 import org.engdream.base.entity.Treeable;
 import org.engdream.base.service.BaseTreeableService;
@@ -18,11 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.validation.Valid;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-
-import javax.validation.Valid;
 
 public abstract class BaseTreeableController<M extends BaseEntity<ID> & Treeable<ID>, ID extends Serializable> extends BaseController<M, ID>{
     @Autowired
@@ -114,12 +112,14 @@ public abstract class BaseTreeableController<M extends BaseEntity<ID> & Treeable
         zTree.setId(m.getId());
         zTree.setPId(m.getParentId());
         zTree.setName(m.getName());
-        zTree.setIconSkin(m.getIcon());
         zTree.setOpen(open);
         zTree.setRoot(m.isRoot());
         zTree.setRoot(m.getParentId().equals(0));
         if(baseTreeableService.hasChildren(m.getId())){
             zTree.setIsParent(true);
+            zTree.setIconSkin(m.getBranchDefaultIcon());
+        } else{
+            zTree.setIconSkin(m.getLeafDefaultIcon());
         }
         if (onlyCheckLeaf && zTree.isParent()) {
             zTree.setNocheck(true);

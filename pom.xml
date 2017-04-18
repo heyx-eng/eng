@@ -16,7 +16,8 @@
 		<module>eng-web</module>
     <module>eng-security</module>
     <module>eng-codegen</module>
-  </modules>
+        <module>eng-redis</module>
+    </modules>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<support.basedir>${project.parent.basedir}/src/support</support.basedir>

@@ -4,11 +4,9 @@ import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-
 import org.engdream.base.entity.BaseEntity;
 import org.engdream.base.entity.Treeable;
 import org.engdream.base.service.BaseTreeableService;
-import org.engdream.sys.entity.Resource;
 
 import java.io.Serializable;
 import java.util.List;
@@ -170,8 +168,7 @@ public abstract class BaseTreeableServiceImpl<M extends BaseEntity<ID> & Treeabl
 
 			@Override
 			public String getSqlSegment() {
-				String.format("where parent_ids = %s and weight>=%s order by weight asc", parent_ids, currentWeight);
-				return null;
+				return String.format("where parent_ids = %s and weight>=%s order by weight asc", parent_ids, currentWeight);
 			}
 		});
     }

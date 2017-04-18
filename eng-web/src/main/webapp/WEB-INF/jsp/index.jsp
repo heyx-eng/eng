@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@include file="/WEB-INF/jsp/include/tags.jsp"%>
 <!doctype html>
 <html lang="en">
 <head>
@@ -17,50 +18,7 @@
 	<div class="content">
 		<%@include file="/WEB-INF/jsp/include/header.jsp"%>
 		<div class="main-content">
-			<div class="table-container">
-				<div class="table-edit-wrapper">
-	                <button id="editable_create" class="btn sbold green"> 新建
-	                    <i class="glyphicon glyphicon-plus"></i>
-	                </button>
-	                <button id="editable_edit" class="btn sbold btn-success"> 编辑
-	                    <i class="glyphicon glyphicon-pencil"></i>
-	                </button>
-	                <button id="editable_delete" class="btn sbold btn-danger"> 删除
-	                    <i class="glyphicon glyphicon-minus"></i>
-	                </button>
-                </div>
-                <div class="table-actions-wrapper">
-                    <span> </span>
-                    <select class="table-group-action-select form-control input-inline input-small input-sm">
-                        <option value="">请选择...</option>
-                        <option value="username_like">用户名</option>
-                    </select>
-                    <input type="input" class="table-group-action-input form-control input-inline input-small input-sm">
-                    <button class="btn btn-sm green table-group-action-submit">
-                        <i class="fa fa-check"></i> 查询</button>
-                </div>
-                <table class="display" id="datatable_ajax">
-                    <thead>
-                        <tr role="row" class="heading">
-                            <th width="2%">
-                                <label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
-                                    <input type="checkbox" class="group-checkable"/>
-                                    <span></span>
-                                </label>
-                            </th>
-                            <th> 是否锁定 </th>
-                            <th> 是否锁定 </th>
-                            <th> 是否锁定 </th>
-                            <th> 是否锁定 </th>
-                            <th> 是否锁定 </th>
-                            <th> 是否锁定 </th>
-                            <th> 是否锁定 </th>
-                            <th> 是否锁定 </th>
-                        </tr>
-                    </thead>
-                    <tbody> </tbody>
-                </table>
-            </div>
+            <iframe src="${ctx }/sys/user/page/list" id="mainFrame" name="mainFrame" onload="startInit('mainFrame', 100)" scrolling="no" frameborder="0" style="width: 100%;"></iframe>
 			<%@include file="/WEB-INF/jsp/include/footer.jsp"%>
 		</div>
 	</div>
@@ -68,20 +26,6 @@
 	<%@include file="/WEB-INF/jsp/ref/plugin-datatable-js.jsp"%>
 	<script type="text/javascript">
 		$(function() {
-			TableDatatablesAjax.init({
-			    baseurl: '${ctx}/sys/user/',
-				columns: [
-	                {"data": "id"},
-	                {"data": "username", "defaultContent": ""},
-	                {"data": "realname", "defaultContent": ""},
-	                {"data": "nickname", "defaultContent": ""},
-	                {"data": "password", "defaultContent": ""},
-	                {"data": "password", "defaultContent": ""},
-	                {"data": "password", "defaultContent": ""},
-	                {"data": "password", "defaultContent": ""},
-	                {"data": "roleIds", "defaultContent": ""}
-	            ]
-			});
 		});
 	</script>
 </body>

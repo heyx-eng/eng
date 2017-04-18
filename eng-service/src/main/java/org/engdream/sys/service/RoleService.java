@@ -1,7 +1,7 @@
 package org.engdream.sys.service;
 
-import org.engdream.sys.entity.Role;
 import org.engdream.base.service.BaseService;
+import org.engdream.sys.entity.Role;
 
 /**
 * <p>

@@ -1,9 +1,10 @@
 package org.engdream.sys.service.impl;
 
+import com.baomidou.mybatisplus.mapper.Wrapper;
+import org.engdream.base.service.impl.BaseServiceImpl;
 import org.engdream.sys.entity.User;
 import org.engdream.sys.mapper.UserMapper;
 import org.engdream.sys.service.UserService;
-import org.engdream.base.service.impl.BaseServiceImpl;
 import org.springframework.stereotype.Service;
 
 /**
@@ -16,8 +17,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class UserServiceImpl extends BaseServiceImpl<User, Long> implements UserService {
-
-    public UserMapper getUserMapper(){
+    private UserMapper getUserMapper(){
         return (UserMapper)baseMapper;
     }
 
@@ -25,4 +25,22 @@ public class UserServiceImpl extends BaseServiceImpl<User, Long> implements User
     public void markDelete(Long id){
         getUserMapper().markDelete(id);
     }
+
+    @Override
+    public User newUser(User user) {
+        insert(user);
+        return user;
+    }
+
+    @Override
+    public User findByUsername(String username) {
+        return super.selectOne(new Wrapper<User>() {
+            @Override
+            public String getSqlSegment() {
+                return String.format(" where username='%s'", username);
+            }
+        });
+    }
+
+
 }

@@ -1,14 +1,12 @@
 package org.engdream.exam.web.controller;
 
+import org.engdream.base.web.controller.BaseCRUDController;
+import org.engdream.base.web.enums.BooleanEnum;
+import org.engdream.exam.entity.Exam;
+import org.engdream.exam.service.ExamService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.http.ResponseEntity;
-import org.engdream.base.web.controller.BaseCRUDController;
-import org.engdream.exam.entity.Exam;
-import org.engdream.exam.service.ExamService;
-import java.util.Date;
 /**
  * <p>
  * 试卷

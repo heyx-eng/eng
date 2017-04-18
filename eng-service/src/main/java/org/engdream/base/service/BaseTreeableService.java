@@ -63,7 +63,6 @@ public interface BaseTreeableService<M extends BaseEntity<ID> & Treeable<ID>, ID
     /**
      * 查找根和一级节点
      *
-     * @param searchable
      * @return
      */
     List<M> findRootAndChild(Wrapper<M> wrapper);

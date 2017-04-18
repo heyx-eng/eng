@@ -25,6 +25,10 @@ public class Resource extends BaseEntity<Long> implements Treeable<Long> {
      * label:资源类型;type:select;valid:required
      */
 	private String type;
+	/**
+	 * label:图标;type:input
+	 */
+	private String icon;
     /**
      * label:跳转链接;type:input
      */
@@ -46,7 +50,7 @@ public class Resource extends BaseEntity<Long> implements Treeable<Long> {
     /**
      * label:权限;type:select;valid:required
      */
-	private String permission;
+	private String identity;
     /**
      * label:是否可用;type:radio;valid:required
      */
@@ -94,13 +98,15 @@ public class Resource extends BaseEntity<Long> implements Treeable<Long> {
 	public void setParentIds(String parentIds) {
 		this.parentIds = parentIds;
 	}
-	public String getPermission() {
-        return permission;
+
+	public String getIdentity() {
+		return identity;
 	}
 
-	public void setPermission(String permission) {
-		this.permission = permission;
+	public void setIdentity(String identity) {
+		this.identity = identity;
 	}
+
 	public Boolean getAvailable() {
         return available;
 	}
@@ -110,13 +116,12 @@ public class Resource extends BaseEntity<Long> implements Treeable<Long> {
 	}
 	@Override
 	public String getIcon() {
-		return "";
+		return this.icon;
 	}
 
 	@Override
 	public void setIcon(String icon) {
-		// TODO Auto-generated method stub
-		
+		this.icon = icon;
 	}
 
 	@Override
