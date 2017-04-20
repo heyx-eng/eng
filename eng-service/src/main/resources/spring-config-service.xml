@@ -7,11 +7,12 @@
        xsi:schemaLocation="
           http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
-          http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+          http://www.springframework.org/schema/tx
+          http://www.springframework.org/schema/tx/spring-tx.xsd
           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <context:component-scan base-package="org.engdream.**.service"/>
-    
+    <context:component-scan base-package="org.engdream.**.service,org.engdream.**.cache"/>
+
     <aop:aspectj-autoproxy expose-proxy="true"/>
     
     <bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean"/>
@@ -31,5 +32,5 @@
         <property name="providerClass" value="org.hibernate.validator.HibernateValidator"/>
         <property name="validationMessageSource" ref="messageSource"/>
     </bean>
-    
+    <import resource="spring-config-redis.xml"/>
 </beans>

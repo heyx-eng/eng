@@ -5,6 +5,7 @@ import org.engdream.base.service.impl.BaseServiceImpl;
 import org.engdream.sys.entity.User;
 import org.engdream.sys.mapper.UserMapper;
 import org.engdream.sys.service.UserService;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 /**
@@ -33,6 +34,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, Long> implements User
     }
 
     @Override
+    @Cacheable("user")
     public User findByUsername(String username) {
         return super.selectOne(new Wrapper<User>() {
             @Override

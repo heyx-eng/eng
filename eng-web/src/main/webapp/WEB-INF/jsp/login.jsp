@@ -10,6 +10,11 @@
     <meta name="author" content="">
     <%@include file="/WEB-INF/jsp/ref/core-css.jsp"%>
     <%@include file="/WEB-INF/jsp/ref/plugin-datatable-css.jsp"%>
+    <script>
+        if(top.location!=self.location){
+            top.location = "${ctx}/login";
+        }
+    </script>
 </head>
 <body class=" theme-black">
 <div class="navbar navbar-default" role="navigation">
