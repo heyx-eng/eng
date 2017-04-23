@@ -40,14 +40,14 @@ public abstract class BaseTreeableController<M extends BaseEntity<ID> & Treeable
 	public String showEditForm(Model model, @RequestParam("id")ID id){
 		assertPermission(PERMS_VIEW);
 		setCommonDate(model);
-		M m = baseTreeableService.selectById(id);
+		M m = baseTreeableService.findById(id);
 		model.addAttribute("m", m);
 		return viewName("edit");
 	}
     @RequestMapping(value = "update", method = RequestMethod.PUT)
 	public ResponseEntity<String> update(@Valid M m, BindingResult bindResult){
 		assertPermission(PERMS_UPDATE);
-		Assert.notNull(m);
+		Assert.notNull(m, "entity must not be null");
 		if(bindResult.hasErrors()){
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("请求参数错误");
 		}
@@ -55,23 +55,10 @@ public abstract class BaseTreeableController<M extends BaseEntity<ID> & Treeable
 		baseTreeableService.updateById(m);
 		return ResponseEntity.ok("修改成功");
 	}
-    protected List<ZTree<ID>> convertToZtreeList(List<M> models, boolean async, boolean onlySelectLeaf) {
-        List<ZTree<ID>> zTrees = Lists.newArrayList();
 
-        if (models == null || models.isEmpty()) {
-            return zTrees;
-        }
-
-        for (M m : models) {
-            ZTree<ID> zTree = convertToZtree(m, !async, onlySelectLeaf);
-            zTrees.add(zTree);
-        }
-        return zTrees;
-    }
-    
     @RequestMapping(value = "get", method = RequestMethod.GET)
     public ResponseEntity<M> get(ID id) {
-    	M m = baseTreeableService.selectById(id);
+    	M m = baseTreeableService.findById(id);
     	if(m == null){
     		return new ResponseEntity<>(m, HttpStatus.NO_CONTENT);
     	}
@@ -81,7 +68,7 @@ public abstract class BaseTreeableController<M extends BaseEntity<ID> & Treeable
     @RequestMapping(value = "appendChild", method = RequestMethod.POST)
     public ResponseEntity<M> appendChild(ID parentId) {
         M child = null;
-        M parent = baseTreeableService.selectById(parentId);
+        M parent = baseTreeableService.findById(parentId);
         try {
             child = clazz.newInstance();
         } catch (InstantiationException | IllegalAccessException e) {
@@ -95,19 +82,43 @@ public abstract class BaseTreeableController<M extends BaseEntity<ID> & Treeable
     @RequestMapping(value = "delete", method = RequestMethod.DELETE)
     public ResponseEntity<String> delete(ID id) {
     	assertPermission("delete");
-    	M m = baseTreeableService.selectById(id);
-    	Assert.notNull(m);
+    	M m = baseTreeableService.findById(id);
+    	Assert.notNull(m, "entity must not be null");
         baseTreeableService.deleteSelfAndChild(m);
         return ResponseEntity.ok("删除成功");
     }
 
     @RequestMapping("tree")
-    public ResponseEntity<List<ZTree<ID>>> tree(){
-        List<M> list = baseTreeableService.selectList(null);
-        return ResponseEntity.ok(convertToZtreeList(list, true, true));
+    public ResponseEntity<List<ZTree<ID>>> tree(
+            @RequestParam(required = false) ID[] checkIds,
+            @RequestParam(required = false) boolean onlySelectLeaf) {
+        List<M> list = baseTreeableService.findAll();
+        return ResponseEntity.ok(convertToZtreeList(list, true, onlySelectLeaf, checkIds));
     }
-    
-    protected ZTree<ID> convertToZtree(M m, boolean open, boolean onlyCheckLeaf) {
+
+    protected List<ZTree<ID>> convertToZtreeList(List<M> models, boolean async, boolean onlySelectLeaf, ID[] checkIds) {
+        List<ZTree<ID>> zTrees = Lists.newArrayList();
+
+        if (models == null || models.isEmpty()) {
+            return zTrees;
+        }
+
+        for (M m : models) {
+            boolean checked = false;
+            if(checkIds != null){
+                for(ID id : checkIds){
+                    if(id == m.getId()){
+                        checked = true;
+                    }
+                }
+            }
+            ZTree<ID> zTree = convertToZtree(m, !async, onlySelectLeaf, checked);
+            zTrees.add(zTree);
+        }
+        return zTrees;
+    }
+
+    protected ZTree<ID> convertToZtree(M m, boolean open, boolean onlyCheckLeaf, boolean checked) {
         ZTree<ID> zTree = new ZTree<>();
         zTree.setId(m.getId());
         zTree.setPId(m.getParentId());
@@ -115,6 +126,7 @@ public abstract class BaseTreeableController<M extends BaseEntity<ID> & Treeable
         zTree.setOpen(open);
         zTree.setRoot(m.isRoot());
         zTree.setRoot(m.getParentId().equals(0));
+        zTree.setChecked(checked);
         if(baseTreeableService.hasChildren(m.getId())){
             zTree.setIsParent(true);
             zTree.setIconSkin(m.getBranchDefaultIcon());
@@ -126,9 +138,9 @@ public abstract class BaseTreeableController<M extends BaseEntity<ID> & Treeable
         } else {
             zTree.setNocheck(false);
         }
-
         return zTree;
     }
+
 }
 
 

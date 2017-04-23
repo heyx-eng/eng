@@ -38,11 +38,16 @@ public abstract class BaseCRUDController<M extends BaseEntity<ID>, ID extends Se
 	public String showCreateForm(Model model){
 		assertPermission(PERMS_CREATE);
 		setCommonDate(model);
-		model.addAttribute("m", newModel());
+		M m = newModel();
+		setDefaultValue(m);
+		model.addAttribute("m", m);
 		model.addAttribute(OPERATOR, "create");
 		return viewName("edit");
 	}
-	
+
+	protected void setDefaultValue(M m) {
+	}
+
 	@RequestMapping(value = "create", method = RequestMethod.POST)
 	public ResponseEntity<String> create(@Valid M m, BindingResult bindResult){
 		assertPermission(PERMS_CREATE);
@@ -52,7 +57,7 @@ public abstract class BaseCRUDController<M extends BaseEntity<ID>, ID extends Se
 		}
 		m.setCreateTime(new Date());
 		m.setModifiedTime(new Date());
-		baseService.insert(m);
+		baseService.save(m);
 		return ResponseEntity.ok("创建成功");
 	}
 
@@ -60,7 +65,7 @@ public abstract class BaseCRUDController<M extends BaseEntity<ID>, ID extends Se
 	public String showEditForm(Model model, @RequestParam("id")ID id){
 		assertPermission(PERMS_VIEW);
 		setCommonDate(model);
-		M m = baseService.selectById(id);
+		M m = baseService.findById(id);
 		model.addAttribute("m", m);
 		model.addAttribute(OPERATOR, "update");
 		return viewName("edit");
@@ -69,7 +74,7 @@ public abstract class BaseCRUDController<M extends BaseEntity<ID>, ID extends Se
 	@RequestMapping(value = "update", method = RequestMethod.PUT)
 	public ResponseEntity<String> update(@Valid M m, BindingResult bindResult){
 		assertPermission(PERMS_UPDATE);
-		Assert.notNull(m);
+		Assert.notNull(m, String.format("%s must not be null", entityClass.getName()));
 		if(bindResult.hasErrors()){
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("请求参数错误");
 		}
@@ -88,14 +93,14 @@ public abstract class BaseCRUDController<M extends BaseEntity<ID>, ID extends Se
 	@RequestMapping(value = "list", method = RequestMethod.GET)
 	public ResponseEntity<DataTable<M>> list(@SearchParam Page<M> page){
 		assertPermission(PERMS_VIEW);
-		DataTable<M> table =  new DataTable<>(baseService.selectPage(page));
+		DataTable<M> table =  new DataTable<>(baseService.findPage(page));
 		return ResponseEntity.ok(table);
 	}
 	
 	@RequestMapping(value = "all", method = RequestMethod.GET)
 	public ResponseEntity<List<M>> all(){
 		assertPermission(PERMS_VIEW);
-		List<M> list =  baseService.selectList(null);
+		List<M> list =  baseService.findList(null);
 		return ResponseEntity.ok(list);
 	}
 	

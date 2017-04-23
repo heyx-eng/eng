@@ -40,7 +40,7 @@ public class ResourceController extends BaseTreeableController<Resource, Long> {
 	protected void setCommonDate(Model model) {
 		model.addAttribute("booleanList", BooleanEnum.values());
 		model.addAttribute("resourceTypeList", ResourceType.values());
-		model.addAttribute("permissionList", permissionService.selectList(null));
+		model.addAttribute("permissionList", permissionService.findAll());
 		super.setCommonDate(model);
 	}
 	@RequestMapping(value = "appendChild", method = RequestMethod.POST)
@@ -55,8 +55,9 @@ public class ResourceController extends BaseTreeableController<Resource, Long> {
 		child.setName("新节点");
 		child.setCreateTime(new Date());
 		child.setModifiedTime(new Date());
-		Resource parent = getResourceService().selectById(parentId);
+		Resource parent = getResourceService().findById(parentId);
 		getResourceService().appendChild(parent, child);
 		return ResponseEntity.ok(child);
 	}
+
 }

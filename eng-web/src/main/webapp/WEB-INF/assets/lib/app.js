@@ -30,7 +30,16 @@ function startInit(iframeId, minHeight) {
         isIE = true;
     window.setInterval("reinitIframe('" + iframeId + "'," + minHeight + ")", 100);
 }
-
+$(function () {
+    $(".nav-list a").each(function () {
+        $(this).bind('click', function () {
+            $(".nav-list li").each(function () {
+                $(this).removeClass('active');
+            });
+            $(this).parent().addClass('active');
+        })
+    });
+});
 function setIframeHeight(iframeId) {
     var cwin = document.getElementById(iframeId);
     if (document.getElementById) {
@@ -47,7 +56,9 @@ function setIframeHeight(iframeId) {
                 cwin.height = cwin.contentWindow.document.body.scrollHeight;//Opera
         }
     }
-};$(function($){
+}
+
+$(function($){
     var waiting = {
         overlay : null,
         show : function(){

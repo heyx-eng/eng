@@ -14,7 +14,7 @@
 </head>
 <body>
     <div class="row">
-        <form:form action="${ctx}/sys/user/${operator}" cssClass="form-horizontal" id="editForm" commandName="m">
+        <form:form action="${ctx}/sys/role/${operator}" cssClass="form-horizontal" id="editForm" commandName="m">
             <c:if test="${operator eq 'create'}">
                 <input id="_method" type="hidden" name="_method" value="post">
             </c:if>
@@ -22,10 +22,19 @@
                 <input id="_method" type="hidden" name="_method" value="put">
             </c:if>
             <form:hidden path="id"/>
+            <form:hidden path="deleted"/>
             <div class="col-md-12">
                 <div class="form-body">
                     <div class="form-group">
-                        <label class="control-label col-md-3">角色
+                        <label class="control-label col-md-3">角色名称
+                        </label>
+                        <div class="col-md-4">
+                            <form:input path="name" cssClass="form-control"/>
+                            <span class="help-block"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3">角色标识
                             <span class="required"> * </span>
                         </label>
                         <div class="col-md-4">
@@ -34,15 +43,8 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="control-label col-md-3">描述
-                        </label>
-                        <div class="col-md-4">
-                            <form:textarea path="description" cssClass="form-control"></form:textarea>
-                            <span class="help-block"></span>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-md-3">资源
+                        <form:hidden path="resourceIds"/>
+                        <label class="control-label col-md-3">菜单资源
                         </label>
                         <div class="col-md-6">
                             <div id="ztree" class="ztree"></div>
@@ -78,12 +80,44 @@
 <%@include file="/WEB-INF/jsp/ref/plugin-ztree.jsp"%>
 <script type="text/javascript">
     $(function() {
-        $("#editForm").submitForm();
-
-		var ztree = $("#ztree").tree({
+        var checkIds='';
+        <c:if test="${m.resourceIds ne null and m.resourceIds ne ''}">
+        checkIds = ${m.resourceIds}.join(',');
+        </c:if>
+        var ztree = $("#ztree").tree({
             baseUrl: '${ctx}/sys/resource',
             check: {
-            	enable: true
+                enable: true
+            },
+            otherParam: {
+                checkIds: checkIds,
+                onlySelectLeaf: true
+            }
+        });
+
+        $("#editForm").submitForm({
+            beforeSubmit: function () {
+                var nodes = ztree.getCheckedNodes();
+                var temp = '';
+                for(var i=0; i< nodes.length; i++){
+                    if(temp === ''){
+                        temp = nodes[i].id;
+                    } else{
+                        temp += ',' + nodes[i].id;
+                    }
+                }
+                if(temp === ''){
+                    alert('请选择菜单资源');
+                    return false;
+                }
+                $("#resourceIds").val(temp);
+                return true;
+            },
+            onSuccess: function (response) {
+                ztree.checkAllNodes(false);
+                alert(response);
+                $("#_method").val("post");
+                $("#editForm").prop("action", $("#editForm").prop("action").replace("update", "create"));
             }
         });
         $("#backBtn").on("click", function () {

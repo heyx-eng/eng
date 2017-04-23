@@ -8,6 +8,7 @@
 		<result column="description" property="description" />
 		<result column="resource_ids" property="resourceIds" />
 		<result column="available" property="available" />
+		<result column="deleted" property="deleted" />
 	</resultMap>
 
     <!-- 通用查询结果列 -->
@@ -17,7 +18,7 @@
 
 	<!-- 逻辑删除 -->
 	<update id="markDelete" parameterType="java.io.Serializable">
-		UPDATE sys_user SET deleted=1 where id=#{id}
+		UPDATE sys_role SET deleted=1 where id=#{id}
 	</update>
 
 </mapper>

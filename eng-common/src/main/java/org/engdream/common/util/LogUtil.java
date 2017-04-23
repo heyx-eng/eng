@@ -10,4 +10,8 @@ public class LogUtil {
 	public static void e(String message, Throwable e) {
         ERROR_LOG.error(message, e);
     }
+
+    public static void w(String s) {
+        System.out.println(s);
+    }
 }

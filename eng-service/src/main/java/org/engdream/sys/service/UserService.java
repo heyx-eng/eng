@@ -1,7 +1,10 @@
 package org.engdream.sys.service;
 
-import org.engdream.sys.entity.User;
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import org.engdream.base.service.BaseService;
+import org.engdream.sys.entity.User;
+import org.engdream.sys.mapper.UserMapper;
+import org.springframework.stereotype.Service;
 
 /**
 * <p>
@@ -11,12 +14,27 @@ import org.engdream.base.service.BaseService;
 * @author Heyx
 * @since 2017-04-05
 */
-public interface UserService extends BaseService<User, Long> {
+@Service
+public class UserService extends BaseService<User, Long> {
 
-    void markDelete(Long id);
+    private UserMapper getUserMapper(){
+        return (UserMapper)baseMapper;
+    }
 
-    User newUser(User user);
+    public void markDelete(Long id){
+        getUserMapper().markDelete(id);
+    }
 
-    User findByUsername(String username);
+    @Override
+    public User save(User user) {
+        super.save(user);
+        return user;
+    }
+
+    public User findByUsername(String username) {
+        EntityWrapper<User> wrapper = new EntityWrapper<>();
+        wrapper.eq("username", username);
+        return super.findOne(wrapper);
+    }
 
 }

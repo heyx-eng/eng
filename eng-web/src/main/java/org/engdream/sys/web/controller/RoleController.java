@@ -36,6 +36,11 @@ public class RoleController extends BaseCRUDController<Role, Long> {
 	}
 
     @Override
+    protected void setDefaultValue(Role role) {
+        role.setDeleted(true);
+    }
+
+    @Override
     @RequestMapping(value = "delete", method = RequestMethod.DELETE)
     public ResponseEntity<String> delete(Long id){
         assertPermission(PERMS_DELETE);

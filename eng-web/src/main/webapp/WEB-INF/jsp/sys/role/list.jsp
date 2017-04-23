@@ -29,17 +29,6 @@
                 <i class="glyphicon glyphicon-minus"></i>
             </button>
             </shiro:hasPermission>
-            <shiro:hasPermission name="sys:role:review">
-            <div class="btn-group">
-                <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    审核 <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu">
-                    <li><a href="#"><i class="glyphicon glyphicon-ok"></i> 通过</a></li>
-                    <li><a href="#"><i class="glyphicon glyphicon-remove"></i> 拒绝</a></li>
-                </ul>
-            </div>
-            </shiro:hasPermission>
         </div>
         <div class="table-actions-wrapper">
             <span> </span>
@@ -60,9 +49,9 @@
                         <span></span>
                     </label>
                 </th>
-                <th>角色</th>
-                <th>描述</th>
-                <th>资源</th>
+                <th>角色名称</th>
+                <th>角色标识</th>
+                <th>菜单资源</th>
                 <th>是否可用</th>
             </tr>
             </thead>
@@ -77,10 +66,23 @@
             baseurl: '${ctx}/sys/role/',
             columns: [
                 {"data": "id"},
+                {"data": "name", "defaultContent": ""},
                 {"data": "role", "defaultContent": ""},
-                {"data": "description", "defaultContent": ""},
                 {"data": "resourceIds", "defaultContent": ""},
                 {"data": "available", "defaultContent": ""}
+            ],
+            ajaxParam: [
+                {
+                    "deleted": 0
+                }
+            ],
+            columnDefs: [
+                {
+                    targets:   -1,
+                    render: function (data) {
+                        return data ? '是' : '否';
+                    }
+                }
             ]
         });
     });

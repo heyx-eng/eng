@@ -19,7 +19,14 @@ var TableDatatablesAjax = function () {
             columnDefOpt = columnDefOpt.concat(opt.columnDefs);
         }
         var grid = new Datatable();
-
+        if(opt.ajaxParam){
+            for(var i=0; i< opt.ajaxParam.length; i++){
+                var param = opt.ajaxParam[i];
+                for(var key in param){
+                    grid.setAjaxParam(key, param[key]);
+                }
+            }
+        }
         grid.init({
             src: $("#datatable_ajax"),
             onSuccess: function (grid, response) {

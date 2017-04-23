@@ -1,7 +1,9 @@
 package org.engdream.sys.service;
 
-import org.engdream.sys.entity.Permission;
 import org.engdream.base.service.BaseService;
+import org.engdream.sys.entity.Permission;
+import org.engdream.sys.mapper.PermissionMapper;
+import org.springframework.stereotype.Service;
 
 /**
 * <p>
@@ -11,5 +13,9 @@ import org.engdream.base.service.BaseService;
 * @author Heyx
 * @since 2017-04-16
 */
-public interface PermissionService extends BaseService<Permission, Long> {
+@Service
+public class PermissionService extends BaseService<Permission, Long> {
+    private PermissionMapper getPermissionMapper(){
+        return (PermissionMapper)baseMapper;
+    }
 }

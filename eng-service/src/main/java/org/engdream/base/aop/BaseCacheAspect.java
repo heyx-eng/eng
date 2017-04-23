@@ -1,4 +1,4 @@
-package org.engdream.base.cache;
+package org.engdream.base.aop;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +24,6 @@ public class BaseCacheAspect implements InitializingBean {
      * @param cacheName
      */
     public void setCacheName(String cacheName) {
-
         this.cacheName = cacheName;
     }
 

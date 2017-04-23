@@ -5,7 +5,7 @@
                 enable: true,
                 url: opts.baseUrl+"/tree",
                 autoParam: ["id"],
-                otherParam: {},
+                otherParam: opts.otherParam ? opts.otherParam : {},
                 dataFilter: null
             },
             view: {
@@ -57,7 +57,7 @@
 					}
                 }
             });*/
-        };
+        }
 
         function filter(treeId, parentNode, childNodes) {
             if (!childNodes) return null;
@@ -130,7 +130,7 @@
         }
         function removeHoverDom(treeId, treeNode) {
             $("#addBtn_"+treeNode.tId).unbind().remove();
-        };
+        }
         return $.fn.zTree.init(ztreeObj, setting);
 	};
 	$.fn.tree = function(opts){

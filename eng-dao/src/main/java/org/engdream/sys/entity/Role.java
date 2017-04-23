@@ -26,7 +26,7 @@ public class Role extends BaseEntity<Long> {
     /**
      * label:描述;type:textarea
      */
-	private String description;
+	private String name;
     /**
      * label:资源;type:tree
      */
@@ -36,6 +36,8 @@ public class Role extends BaseEntity<Long> {
      * label:是否可用;type:radio;valid:required
      */
 	private Boolean available;
+	private Boolean deleted;
+
 
 	public String getRole() {
         return role;
@@ -44,12 +46,13 @@ public class Role extends BaseEntity<Long> {
 	public void setRole(String role) {
 		this.role = role;
 	}
-	public String getDescription() {
-        return description;
+
+	public String getName() {
+		return name;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public List<Long> getResourceIds() {
@@ -64,8 +67,17 @@ public class Role extends BaseEntity<Long> {
         return available;
 	}
 
+	public Boolean getDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(Boolean deleted) {
+		this.deleted = deleted;
+	}
+
 	public void setAvailable(Boolean available) {
 		this.available = available;
+
 	}
 
 }

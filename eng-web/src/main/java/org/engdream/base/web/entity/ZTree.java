@@ -21,6 +21,7 @@ public class ZTree<ID extends Serializable> implements Serializable {
     private boolean root;
     private boolean isParent;
     private boolean nocheck = false;
+    private boolean checked;
 
     public ID getId() {
         return id;
@@ -85,6 +86,14 @@ public class ZTree<ID extends Serializable> implements Serializable {
 
     public void setNocheck(boolean nocheck) {
         this.nocheck = nocheck;
+    }
+
+    public boolean isChecked() {
+        return checked;
+    }
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
     }
 
 }

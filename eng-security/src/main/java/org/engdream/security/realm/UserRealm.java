@@ -6,7 +6,6 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.engdream.security.service.SecurityService;
-import org.engdream.sys.entity.User;
 import org.engdream.sys.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -31,15 +30,6 @@ public class UserRealm extends AuthorizingRealm {
         UsernamePasswordToken upToken = (UsernamePasswordToken) token;
         String username = upToken.getUsername();
 
-        User user = userService.findByUsername(username);
-
-        if(user == null) {
-            throw new UnknownAccountException();//没找到帐号
-        }
-
-        if(Boolean.TRUE.equals(user.getLocked())) {
-            throw new LockedAccountException(); //帐号锁定
-        }
         try{
             securiryService.checkPaaword(username, String.valueOf(upToken.getPassword()));
         } catch (UnknownAccountException | DisabledAccountException e){
@@ -48,7 +38,7 @@ public class UserRealm extends AuthorizingRealm {
             throw e;
         }
         return new SimpleAuthenticationInfo(
-                user.getUsername(), //用户名
+                username,
                 upToken.getPassword(), //密码
                 getName()  //realm name
         );

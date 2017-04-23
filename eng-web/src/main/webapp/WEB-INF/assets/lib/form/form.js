@@ -8,7 +8,10 @@
         $this.validate({
             submitHandler: function(form) {
                 if(settings.beforeSubmit){
-                    settings.beforeSubmit();
+                    var res = settings.beforeSubmit();
+                    if(!res){
+                        return;
+                    }
                 }
                 $(form).ajaxSubmit({
                     beforeSubmit: function() {
@@ -16,12 +19,12 @@
                         $(".submit-btn").attr("disabled", true);
                     },
                     success: function(response) {
-                        $(".submit-btn").removeAttr("disabled");
                         $.waiting("hide");
+                        $(".submit-btn").removeAttr("disabled");
                         //清除隐藏域  --> true
                         $(form).clearForm(true);
                         if(settings.onSuccess){
-                            settings.onSuccess();
+                            settings.onSuccess(response);
                         } else{
                             alert(response);
                             $("#_method").val("post");

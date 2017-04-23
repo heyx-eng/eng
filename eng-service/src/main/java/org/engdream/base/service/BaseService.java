@@ -15,166 +15,118 @@
  */
 package org.engdream.base.service;
 
+import com.baomidou.mybatisplus.entity.TableInfo;
+import com.baomidou.mybatisplus.enums.SqlMethod;
+import com.baomidou.mybatisplus.exceptions.MybatisPlusException;
+import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.baomidou.mybatisplus.mapper.Condition;
+import com.baomidou.mybatisplus.mapper.SqlHelper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
+import com.baomidou.mybatisplus.toolkit.CollectionUtils;
+import com.baomidou.mybatisplus.toolkit.ReflectionKit;
+import com.baomidou.mybatisplus.toolkit.StringUtils;
+import com.baomidou.mybatisplus.toolkit.TableInfoHelper;
+import org.apache.ibatis.logging.Log;
+import org.apache.ibatis.logging.LogFactory;
+import org.apache.ibatis.session.SqlSession;
 import org.engdream.base.entity.BaseEntity;
+import org.engdream.base.util.SqlUtil;
+import org.engdream.common.util.ReflectUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
 
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
-public interface BaseService<T extends BaseEntity<ID>, ID extends Serializable> {
+public abstract class BaseService<T extends BaseEntity<ID>, ID extends Serializable> {
+
+	private static final Log logger = LogFactory.getLog(BaseService.class);
+	private static final String DEFAULT_CACHE_NAME = "default_cache";
+
+	@Autowired
+	protected BaseMapper<T> baseMapper;
+
+	protected Class<T> currentModleClass() {
+		return ReflectUtils.findParameterizedType(getClass(), 0);
+	}
 
 	/**
 	 * <p>
-	 * 插入一条记录
+	 * 批量操作 SqlSession
+	 * </p>
+	 */
+	protected SqlSession sqlSessionBatch() {
+		return SqlHelper.sqlSessionBatch(currentModleClass());
+	}
+
+	/**
+	 * 获取SqlStatement
+	 *
+	 * @param sqlMethod
+	 * @return
+	 */
+	protected String sqlStatement(SqlMethod sqlMethod) {
+		return SqlHelper.table(currentModleClass()).getSqlStatement(sqlMethod.getMethod());
+	}
+
+	/**
+	 * <p>
+	 * 判断数据库操作是否成功
+	 * </p>
+	 * <p>
+	 * 注意！！ 该方法为 Integer 判断，不可传入 int 基本类型
 	 * </p>
 	 *
-	 * @param entity
-	 *            实体对象
+	 * @param result
+	 *            数据库操作返回影响条数
 	 * @return boolean
 	 */
-	boolean insert(T entity);
+	protected static boolean retBool(Integer result) {
+		return SqlHelper.retBool(result);
+	}
+
+	public T save(T entity) {
+		baseMapper.insert(entity);
+		return entity;
+	}
+
+	public boolean saveBatch(List<T> entityList) {
+		return saveBatch(entityList, 30);
+	}
 
 	/**
-	 * <p>
-	 * 插入（批量）
-	 * </p>
+	 * 批量插入
 	 *
 	 * @param entityList
-	 *            实体对象列表
-	 * @return boolean
-	 */
-	boolean insertBatch(List<T> entityList);
-
-	/**
-	 * <p>
-	 * 插入（批量）
-	 * </p>
-	 *
-	 * @param entityList
-	 *            实体对象列表
 	 * @param batchSize
-	 *            插入批次数量
-	 * @return boolean
+	 * @return
 	 */
-	boolean insertBatch(List<T> entityList, int batchSize);
+	public boolean saveBatch(List<T> entityList, int batchSize) {
+		if (CollectionUtils.isEmpty(entityList)) {
+			throw new IllegalArgumentException("Error: entityList must not be empty");
+		}
+		SqlSession batchSqlSession = sqlSessionBatch();
+		try {
+			int size = entityList.size();
+			String sqlStatement = sqlStatement(SqlMethod.INSERT_ONE);
+			for (int i = 0; i < size; i++) {
+				batchSqlSession.insert(sqlStatement, entityList.get(i));
+				if (i >= 1 && i % batchSize == 0) {
+					batchSqlSession.flushStatements();
+				}
+			}
+			batchSqlSession.flushStatements();
+		} catch (Exception e) {
+			logger.error("Error: Cannot execute insertBatch Method. Cause:" + e);
+			return false;
+		} finally {
+			batchSqlSession.close();
+		}
+		return true;
 
-	/**
-	 * <p>
-	 * 批量修改插入
-	 * </p>
-	 *
-	 * @param entityList
-	 *            实体对象列表
-	 * @return boolean
-	 */
-	boolean insertOrUpdateBatch(List<T> entityList);
-
-	/**
-	 * <p>
-	 * 批量修改插入
-	 * </p>
-	 *
-	 * @param entityList
-	 *            实体对象列表
-	 * @param batchSize
-	 *
-	 * @return boolean
-	 */
-	boolean insertOrUpdateBatch(List<T> entityList, int batchSize);
-
-	/**
-	 * <p>
-	 * 根据 ID 删除
-	 * </p>
-	 *
-	 * @param id
-	 *            主键ID
-	 * @return boolean
-	 */
-	boolean deleteById(ID id);
-
-	/**
-	 * <p>
-	 * 根据 columnMap 条件，删除记录
-	 * </p>
-	 *
-	 * @param columnMap
-	 *            表字段 map 对象
-	 * @return boolean
-	 */
-	boolean deleteByMap(Map<String, Object> columnMap);
-
-	/**
-	 * <p>
-	 * 根据 entity 条件，删除记录
-	 * </p>
-	 *
-	 * @param wrapper
-	 *            实体包装类 {@link Wrapper}
-	 * @return boolean
-	 */
-	boolean delete(Wrapper<T> wrapper);
-
-	/**
-	 * <p>
-	 * 删除（根据ID 批量删除）
-	 * </p>
-	 *
-	 * @param idList
-	 *            主键ID列表
-	 * @return boolean
-	 */
-	boolean deleteBatchIds(List<ID> idList);
-
-	/**
-	 * <p>
-	 * 根据 ID 修改
-	 * </p>
-	 *
-	 * @param entity
-	 *            实体对象
-	 * @return boolean
-	 */
-	boolean updateById(T entity);
-
-	/**
-	 * <p>
-	 * 根据 whereEntity 条件，更新记录
-	 * </p>
-	 *
-	 * @param entity
-	 *            实体对象
-	 * @param wrapper
-	 *            实体包装类 {@link Wrapper}
-	 * @return boolean
-	 */
-	boolean update(T entity, Wrapper<T> wrapper);
-
-	/**
-	 * <p>
-	 * 根据ID 批量更新
-	 * </p>
-	 *
-	 * @param entityList
-	 *            实体对象列表
-	 * @return boolean
-	 */
-	boolean updateBatchById(List<T> entityList);
-
-	/**
-	 * <p>
-	 * 根据ID 批量更新
-	 * </p>
-	 *
-	 * @param entityList
-	 *            实体对象列表
-	 * @param batchSize
-	 *            更新批次数量
-	 * @return boolean
-	 */
-	boolean updateBatchById(List<T> entityList, int batchSize);
+	}
 
 	/**
 	 * <p>
@@ -185,154 +137,178 @@ public interface BaseService<T extends BaseEntity<ID>, ID extends Serializable> 
 	 *            实体对象
 	 * @return boolean
 	 */
-	boolean insertOrUpdate(T entity);
+	public T saveOrUpdate(T entity) {
+		if (null != entity) {
+			Class<?> cls = entity.getClass();
+			TableInfo tableInfo = TableInfoHelper.getTableInfo(cls);
+			if (null != tableInfo && StringUtils.isNotEmpty(tableInfo.getKeyProperty())) {
+				Object idVal = ReflectionKit.getMethodValue(cls, entity, tableInfo.getKeyProperty());
+				if (StringUtils.checkValNull(idVal)) {
+					return save(entity);
+				} else {
+					/*
+					 * 更新成功直接返回，失败执行插入逻辑
+					 */
+					T rlt = updateById(entity);
+					if (rlt == null) {
+						return save(entity);
+					}
+					return entity;
+				}
+			} else {
+				throw new MybatisPlusException("Error:  Can not execute. Could not find @TableId.");
+			}
+		}
+		return entity;
+	}
 
-	/**
-	 * <p>
-	 * 根据 ID 查询
-	 * </p>
-	 *
-	 * @param id
-	 *            主键ID
-	 * @return T
-	 */
-	T selectById(ID id);
+	public boolean saveOrUpdateBatch(List<T> entityList) {
+		return saveOrUpdateBatch(entityList, 30);
+	}
 
-	/**
-	 * <p>
-	 * 查询（根据ID 批量查询）
-	 * </p>
-	 *
-	 * @param idList
-	 *            主键ID列表
-	 * @return List<T>
-	 */
-	List<T> selectBatchIds(List<ID> idList);
+	public boolean saveOrUpdateBatch(List<T> entityList, int batchSize) {
+		if (CollectionUtils.isEmpty(entityList)) {
+			throw new IllegalArgumentException("Error: entityList must not be empty");
+		}
+		SqlSession batchSqlSession = sqlSessionBatch();
+		try {
+			int size = entityList.size();
+			for (int i = 0; i < size; i++) {
+				saveOrUpdate(entityList.get(i));
+				if (i >= 1 && i % batchSize == 0) {
+					batchSqlSession.flushStatements();
+				}
+			}
+			batchSqlSession.flushStatements();
+		} catch (Exception e) {
+			logger.error("Error: Cannot execute insertOrUpdateBatch Method. Cause:" + e);
+			return false;
+		} finally {
+			batchSqlSession.close();
+		}
+		return true;
+	}
 
-	/**
-	 * <p>
-	 * 查询（根据 columnMap 条件）
-	 * </p>
-	 *
-	 * @param columnMap
-	 *            表字段 map 对象
-	 * @return List<T>
-	 */
-	List<T> selectByMap(Map<String, Object> columnMap);
+	public boolean deleteById(ID id) {
+		return retBool(baseMapper.deleteById(id));
+	}
 
-	/**
-	 * <p>
-	 * 根据 Wrapper，查询一条记录
-	 * </p>
-	 *
-	 * @param wrapper
-	 *            实体对象
-	 * @return T
-	 */
-	T selectOne(Wrapper<T> wrapper);
+	public boolean deleteBatchIds(List<ID> idList) {
+		return retBool(baseMapper.deleteBatchIds(idList));
+	}
 
-	/**
-	 * <p>
-	 * 根据 Wrapper，查询一条记录
-	 * </p>
-	 *
-	 * @param wrapper
-	 *            {@link Wrapper}
-	 * @return Map<String,Object>
-	 */
-	Map<String, Object> selectMap(Wrapper<T> wrapper);
+	public T updateById(T entity) {
+		boolean res = retBool(baseMapper.updateById(entity));
+		return res ? entity : null;
+	}
 
-	/**
-	 * <p>
-	 * 根据 Wrapper，查询一条记录
-	 * </p>
-	 *
-	 * @param wrapper
-	 *            {@link Wrapper}
-	 * @return Object
-	 */
-	Object selectObj(Wrapper<T> wrapper);
+	public T update(T entity, Wrapper<T> wrapper) {
+		boolean res = retBool(baseMapper.update(entity, wrapper));
+		return res ? entity : null;
+	}
 
-	/**
-	 * <p>
-	 * 根据 Wrapper 条件，查询总记录数
-	 * </p>
-	 *
-	 * @param wrapper
-	 *            实体对象
-	 * @return int
-	 */
-	int selectCount(Wrapper<T> wrapper);
+	public boolean updateBatchById(List<T> entityList) {
+		return updateBatchById(entityList, 30);
+	}
 
-	/**
-	 * <p>
-	 * 查询列表
-	 * </p>
-	 *
-	 * @param wrapper
-	 *            实体包装类 {@link Wrapper}
-	 * @return
-	 */
-	List<T> selectList(Wrapper<T> wrapper);
+	public boolean updateBatchById(List<T> entityList, int batchSize) {
+		if (CollectionUtils.isEmpty(entityList)) {
+			throw new IllegalArgumentException("Error: entityList must not be empty");
+		}
+		SqlSession batchSqlSession = sqlSessionBatch();
+		try {
+			int size = entityList.size();
+			String sqlStatement = sqlStatement(SqlMethod.UPDATE_BY_ID);
+			for (int i = 0; i < size; i++) {
+				batchSqlSession.update(sqlStatement, entityList.get(i));
+				if (i >= 1 && i % batchSize == 0) {
+					batchSqlSession.flushStatements();
+				}
+			}
+			batchSqlSession.flushStatements();
+		} catch (Exception e) {
+			logger.error("Error: Cannot execute insertBatch Method. Cause:" + e);
+			return false;
+		} finally {
+			batchSqlSession.close();
+		}
+		return true;
+	}
+	public T findById(ID id) {
+		return baseMapper.selectById(id);
+	}
 
-	/**
-	 * <p>
-	 * 翻页查询
-	 * </p>
-	 *
-	 * @param page
-	 *            翻页对象
-	 * @return
-	 */
-	Page<T> selectPage(Page<T> page);
+	public List<T> findBatchIds(List<ID> idList) {
+		return baseMapper.selectBatchIds(idList);
+	}
 
-	/**
-	 * <p>
-	 * 查询列表
-	 * </p>
-	 *
-	 * @param wrapper
-	 *            {@link Wrapper}
-	 * @return
-	 */
-	List<Map<String, Object>> selectMaps(Wrapper<T> wrapper);
+	public List<T> findByMap(Map<String, Object> columnMap) {
+		return baseMapper.selectByMap(columnMap);
+	}
 
-	/**
-	 * <p>
-	 * 根据 Wrapper 条件，查询全部记录
-	 * </p>
-	 *
-	 * @param wrapper
-	 *            实体对象封装操作类（可以为 null）
-	 * @return List<Object>
-	 */
-	List<Object> selectObjs(Wrapper<T> wrapper);
+	public T findOne(Wrapper<T> wrapper) {
+		return SqlHelper.getObject(baseMapper.selectList(wrapper));
+	}
 
-	/**
-	 * <p>
-	 * 翻页查询
-	 * </p>
-	 *
-	 * @param page
-	 *            翻页对象
-	 * @param wrapper
-	 *            {@link Wrapper}
-	 * @return
-	 */
-	@SuppressWarnings("rawtypes")
-	Page<Map<String, Object>> selectMapsPage(Page page, Wrapper<T> wrapper);
+	public Map<String, Object> findMap(Wrapper<T> wrapper) {
+		return SqlHelper.getObject(baseMapper.selectMaps(wrapper));
+	}
 
-	/**
-	 * <p>
-	 * 翻页查询
-	 * </p>
-	 *
-	 * @param page
-	 *            翻页对象
-	 * @param wrapper
-	 *            实体包装类 {@link Wrapper}
-	 * @return
-	 */
-	Page<T> selectPage(Page<T> page, Wrapper<T> wrapper);
+	public Object findObj(Wrapper<T> wrapper) {
+		return SqlHelper.getObject(baseMapper.selectObjs(wrapper));
+	}
 
+	public int findCount(Wrapper<T> wrapper) {
+		return SqlHelper.retCount(baseMapper.selectCount(wrapper));
+	}
+
+	public List<T> findList(Wrapper<T> wrapper) {
+		return baseMapper.selectList(wrapper);
+	}
+
+	public List<T> findAll() {
+		return baseMapper.selectList(null);
+	}
+
+	@SuppressWarnings("unchecked")
+	public Page<T> findPage(Page<T> page) {
+		return findPage(page, Condition.instance());
+	}
+
+	public List<Map<String, Object>> findMaps(Wrapper<T> wrapper) {
+		return baseMapper.selectMaps(wrapper);
+	}
+
+	public List<Object> findObjs(Wrapper<T> wrapper) {
+		return baseMapper.selectObjs(wrapper);
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public Page<Map<String, Object>> findMapsPage(Page page, Wrapper<T> wrapper) {
+		SqlUtil.fillWrapper(page, wrapper);
+		page.setRecords(baseMapper.selectMapsPage(page, wrapper));
+		return page;
+	}
+
+	public Page<T> findPage(Page<T> page, Wrapper<T> wrapper) {
+		SqlUtil.fillWrapper(page, wrapper);
+		page.setRecords(baseMapper.selectPage(page, wrapper));
+		return page;
+	}
+
+	private String getCacheName() {
+		CacheConfig cacheConfig = getClass().getAnnotation(CacheConfig.class);
+		if (cacheConfig == null || cacheConfig.cacheNames().length < 1) {
+			return DEFAULT_CACHE_NAME;
+		} else {
+			return cacheConfig.cacheNames()[0];
+		}
+	}
+
+	private String getCacheKey(T t){
+		return getCacheKey(t.getId());
+	}
+	private String getCacheKey(ID id) {
+		return getCacheName()+":"+id;
+	}
 }
