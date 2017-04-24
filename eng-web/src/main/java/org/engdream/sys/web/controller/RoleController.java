@@ -1,14 +1,15 @@
 package org.engdream.sys.web.controller;
 
+import org.engdream.base.web.controller.BaseCRUDController;
+import org.engdream.base.web.enums.BooleanEnum;
+import org.engdream.base.web.enums.PermissionEnum;
+import org.engdream.sys.entity.Role;
+import org.engdream.sys.service.RoleService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.http.ResponseEntity;
-import org.engdream.base.web.enums.BooleanEnum;
-import org.engdream.base.web.controller.BaseCRUDController;
-import org.engdream.sys.entity.Role;
-import org.engdream.sys.service.RoleService;
 /**
  * <p>
  * 
@@ -43,14 +44,14 @@ public class RoleController extends BaseCRUDController<Role, Long> {
     @Override
     @RequestMapping(value = "delete", method = RequestMethod.DELETE)
     public ResponseEntity<String> delete(Long id){
-        assertPermission(PERMS_DELETE);
+        assertPermission(PermissionEnum.delete.name());
         getRoleService().markDelete(id);
         return ResponseEntity.ok("删除成功");
     }
     @Override
     @RequestMapping(value = "batchDelete", method = RequestMethod.DELETE)
     public ResponseEntity<String> batchDelete(Long[] ids){
-        assertPermission(PERMS_DELETE);
+        assertPermission(PermissionEnum.delete.name());
         for(Long id : ids){
             getRoleService().markDelete(id);
         }

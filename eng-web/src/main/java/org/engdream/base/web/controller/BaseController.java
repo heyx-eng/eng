@@ -1,6 +1,8 @@
 package org.engdream.base.web.controller;
 
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.UnauthorizedException;
+import org.apache.shiro.subject.Subject;
 import org.engdream.base.entity.BaseEntity;
 import org.engdream.common.util.LogUtil;
 import org.engdream.common.util.ReflectUtils;
@@ -17,11 +19,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.Serializable;
 
 public abstract class BaseController<M extends BaseEntity<ID>, ID extends Serializable> {
-	protected static final String PERMS_VIEW = "view";
-	protected static final String PERMS_AUDIT = "audit";
-	protected static final String PERMS_CREATE = "create";
-	protected static final String PERMS_UPDATE = "update";
-	protected static final String PERMS_DELETE = "delete";
 	 /**
      * 实体类型
      */
@@ -124,11 +121,10 @@ public abstract class BaseController<M extends BaseEntity<ID>, ID extends Serial
 	}
     
     protected void assertPermission(String perms) {
-    	return;
-		/*Subject subject = SecurityUtils.getSubject();
-		subject.checkPermission(getResourcePrefix()+":"+perms);*/
+		Subject subject = SecurityUtils.getSubject();
+		subject.checkPermission("base:"+getResourcePrefix()+":"+perms);
 	}
-    
+
 	protected abstract String getResourcePrefix();
-	
+
 }

@@ -1,6 +1,7 @@
 package org.engdream.sys.aop;
 
 import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
@@ -39,6 +40,18 @@ public class ResourceCacheAspect extends AbstractCacheAspect<Resource, Long> {
         resourceList = (List<Resource>) proceedingJoinPoint.proceed();
         put(key, resourceList);
         return resourceList;
+    }
+
+    /**
+     * 移动后清除缓存
+     */
+    @Pointcut(value ="execution(* move(..))")
+    protected void cacheMoveEvictPointcut() {
+    }
+
+    @After(value =  "targetPointcut() && cacheMoveEvictPointcut()")
+    protected void cacheEvictAllAdvice(){
+        clear();
     }
 
     /**

@@ -48,7 +48,7 @@
                             <span class="required"> * </span>
                         </label>
                         <div class="col-md-4">
-                            <form:checkboxes path="roleIds" items="${roles}" itemValue="id" itemLabel="description" cssClass="required" element="div class=\"app-inline\""/>
+                            <form:checkboxes path="roleIds" items="${roles}" itemValue="id" itemLabel="name" cssClass="required" element="div class=\"app-inline\""/>
                             <span class="help-block"></span>
                         </div>
                     </div>
@@ -58,7 +58,7 @@
                             <span class="required"> * </span>
                         </label>
                         <div class="col-md-4">
-                            <form:radiobuttons path="locked" items="${booleanList}" itemLabel="info" element="div class=\"app-inline\""/>
+                            <form:radiobuttons path="locked" items="${booleanList}" itemLabel="info" cssClass="required" element="div class=\"app-inline\""/>
                             <span class="help-block"></span>
                         </div>
                     </div>
@@ -132,7 +132,7 @@
                             <span class="required"> * </span>
                         </label>
                         <div class="col-md-4">
-                            <form:radiobuttons path="deleted" cssClass="" items="${booleanList}" itemLabel="info" element="div class=\"app-inline\""/>
+                            <form:radiobuttons path="deleted" cssClass="required" items="${booleanList}" itemLabel="info" element="div class=\"app-inline\""/>
                             <span class="help-block"></span>
                         </div>
                     </div>

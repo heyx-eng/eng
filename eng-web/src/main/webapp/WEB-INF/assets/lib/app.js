@@ -40,6 +40,13 @@ $(function () {
         })
     });
 });
+
+function openUrl(that, url, target) {
+    var menu = $(that).data('menu');
+    $("#pageTitle").text(menu+' #');
+    $(target).prop('src', url);
+}
+
 function setIframeHeight(iframeId) {
     var cwin = document.getElementById(iframeId);
     if (document.getElementById) {

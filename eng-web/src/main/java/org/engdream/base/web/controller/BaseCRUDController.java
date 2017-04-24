@@ -6,6 +6,7 @@ import org.engdream.base.entity.BaseEntity;
 import org.engdream.base.service.BaseService;
 import org.engdream.base.web.annotation.SearchParam;
 import org.engdream.base.web.entity.DataTable;
+import org.engdream.base.web.enums.PermissionEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +37,7 @@ public abstract class BaseCRUDController<M extends BaseEntity<ID>, ID extends Se
 
 	@RequestMapping(value = "page/create", method = RequestMethod.GET)
 	public String showCreateForm(Model model){
-		assertPermission(PERMS_CREATE);
+		assertPermission(PermissionEnum.create.name());
 		setCommonDate(model);
 		M m = newModel();
 		setDefaultValue(m);
@@ -50,7 +51,7 @@ public abstract class BaseCRUDController<M extends BaseEntity<ID>, ID extends Se
 
 	@RequestMapping(value = "create", method = RequestMethod.POST)
 	public ResponseEntity<String> create(@Valid M m, BindingResult bindResult){
-		assertPermission(PERMS_CREATE);
+		assertPermission(PermissionEnum.create.name());
 		Assert.notNull(m);
 		if(bindResult.hasErrors()){
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("请求参数错误");
@@ -63,7 +64,7 @@ public abstract class BaseCRUDController<M extends BaseEntity<ID>, ID extends Se
 
 	@RequestMapping(value = "page/edit", method = RequestMethod.GET)
 	public String showEditForm(Model model, @RequestParam("id")ID id){
-		assertPermission(PERMS_VIEW);
+		assertPermission(PermissionEnum.update.name());
 		setCommonDate(model);
 		M m = baseService.findById(id);
 		model.addAttribute("m", m);
@@ -73,7 +74,7 @@ public abstract class BaseCRUDController<M extends BaseEntity<ID>, ID extends Se
 
 	@RequestMapping(value = "update", method = RequestMethod.PUT)
 	public ResponseEntity<String> update(@Valid M m, BindingResult bindResult){
-		assertPermission(PERMS_UPDATE);
+		assertPermission(PermissionEnum.update.name());
 		Assert.notNull(m, String.format("%s must not be null", entityClass.getName()));
 		if(bindResult.hasErrors()){
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("请求参数错误");
@@ -85,35 +86,35 @@ public abstract class BaseCRUDController<M extends BaseEntity<ID>, ID extends Se
 
 	@RequestMapping(value = "page/list", method = RequestMethod.GET)
 	public String listPage(Model model){
-		assertPermission(PERMS_VIEW);
+		assertPermission(PermissionEnum.view.name());
 		setCommonDate(model);
 		return viewName("list");
 	}
 
 	@RequestMapping(value = "list", method = RequestMethod.GET)
 	public ResponseEntity<DataTable<M>> list(@SearchParam Page<M> page){
-		assertPermission(PERMS_VIEW);
+		assertPermission(PermissionEnum.view.name());
 		DataTable<M> table =  new DataTable<>(baseService.findPage(page));
 		return ResponseEntity.ok(table);
 	}
 	
 	@RequestMapping(value = "all", method = RequestMethod.GET)
 	public ResponseEntity<List<M>> all(){
-		assertPermission(PERMS_VIEW);
+		assertPermission(PermissionEnum.view.name());
 		List<M> list =  baseService.findList(null);
 		return ResponseEntity.ok(list);
 	}
 	
 	@RequestMapping(value = "delete", method = RequestMethod.DELETE)
 	public ResponseEntity<String> delete(ID id){
-		assertPermission(PERMS_DELETE);
+		assertPermission(PermissionEnum.delete.name());
 		baseService.deleteById(id);
 		return ResponseEntity.ok("删除成功");
 	}
 	
 	@RequestMapping(value = "batchDelete", method = RequestMethod.DELETE)
 	public ResponseEntity<String> batchDelete(ID[] ids){
-		assertPermission(PERMS_DELETE);
+		assertPermission(PermissionEnum.delete.name());
 		baseService.deleteBatchIds(Arrays.asList(ids));
 		return ResponseEntity.ok("批量删除成功");
 	}

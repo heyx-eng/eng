@@ -5,7 +5,7 @@
 	<!-- 通用查询映射结果 -->
 	<resultMap id="BaseResultMap" type="org.engdream.sys.entity.Role">
 		<result column="role" property="role" />
-		<result column="description" property="description" />
+		<result column="name" property="name" />
 		<result column="resource_ids" property="resourceIds" />
 		<result column="available" property="available" />
 		<result column="deleted" property="deleted" />
@@ -13,7 +13,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-	role, description, resource_ids AS resourceIds, available
+	role, name, resource_ids AS resourceIds, available
     </sql>
 
 	<!-- 逻辑删除 -->

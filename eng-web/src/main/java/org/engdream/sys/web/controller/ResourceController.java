@@ -7,9 +7,11 @@ import org.engdream.sys.service.PermissionService;
 import org.engdream.sys.service.ResourceService;
 import org.engdream.sys.web.enums.ResourceType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -58,6 +60,18 @@ public class ResourceController extends BaseTreeableController<Resource, Long> {
 		Resource parent = getResourceService().findById(parentId);
 		getResourceService().appendChild(parent, child);
 		return ResponseEntity.ok(child);
+	}
+	@Override
+	@RequestMapping(value = "delete", method = RequestMethod.DELETE)
+	public ResponseEntity<String> delete(Long id) {
+		assertPermission("delete");
+		Resource m = getResourceService().findById(id);
+		Assert.notNull(m, "没有找到对应的实体");
+		if(m.isRoot()){
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("根节点不能删除");
+		}
+		getResourceService().deleteSelfAndChild(m);
+		return ResponseEntity.ok("删除成功");
 	}
 
 }

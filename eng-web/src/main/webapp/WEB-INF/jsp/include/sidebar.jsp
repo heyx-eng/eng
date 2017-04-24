@@ -7,10 +7,10 @@
 				<a href="javascript:void(0);" data-target=".menu-${menuItem.id}" class="nav-header collapsed" data-toggle="collapse"><i class="${menuItem.icon}"></i> ${menuItem.name}<i class="fa fa-collapse"></i></a>
 			</li>
 			<li>
-				<ul class="menu-${menuItem.id} nav nav-list collapse">
+				<ul class="menu-${menuItem.id} nav nav-list collapse" data-menu="${menuItem.name}">
 				<c:forEach items="${menuItem.children}" var="subMenu">
 					<li>
-						<a href="${subMenu.url}" target="mainFrame"><span class="${subMenu.icon}"></span> ${subMenu.name}</a>
+						<a href="javascript:void(0)" onclick="openUrl(this,'${subMenu.url}', '#mainFrame')" data-menu="${subMenu.name}"><span class="${subMenu.icon}"></span> ${subMenu.name}</a>
 					</li>
 				</c:forEach>
 				</ul>

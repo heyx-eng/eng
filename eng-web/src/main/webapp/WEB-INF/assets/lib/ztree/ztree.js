@@ -33,6 +33,7 @@
             callback: {
                 beforeRemove: beforeRemove,
                 onRemove: zTreeOnRemove,
+                onDrop: zTreeOnDrop,
                 onClick: zTreeOnClick
             },
             baseUrl: '',
@@ -45,18 +46,6 @@
         	} else{
         		$(setting.editFrame).prop("src", setting.baseUrl+"/page/edit?id="+treeNode.id);
         	}
-            /*$.waiting("show");
-            $.ajax({
-                url: opts.baseUrl+"/get?id="+treeNode.id,
-                type:"get",
-                dataType:"json",
-                success: function(data){
-                    $.waiting("hide");
-                    if(opts.onClick){
-                        opts.onClick(data);
-					}
-                }
-            });*/
         }
 
         function filter(treeId, parentNode, childNodes) {
@@ -85,9 +74,25 @@
             	}
             });
         }
+        function zTreeOnDrop(event, treeId, treeNodes, targetNode, moveType) {
+            var sourceId = treeNodes[0].id;
+            var targetId = targetNode.id;
+            $.ajax({
+                url: setting.baseUrl+'/move',
+                data: {
+                    sourceId: sourceId,
+                    targetId: targetId,
+                    moveType: moveType
+                },
+                method: 'get',
+                success: function(response){
+                    console.log(response);
+                }
+            });
+        }
         function addHoverDom(treeId, treeNode) {
             var sObj = $("#" + treeNode.tId + "_span");
-            if (treeNode.editNameFlag || $("#addBtn_"+treeNode.tId).length>0) return;
+            if (!setting.edit.enable || treeNode.editNameFlag || $("#addBtn_"+treeNode.tId).length>0) return;
             var addStr = "<span class='button add' id='addBtn_" + treeNode.tId
                 + "' title='add node' onfocus='this.blur();'></span>";
             sObj.after(addStr);

@@ -35,6 +35,15 @@
 	                    </div>
 	                </div>
 					<div class="form-group">
+						<label class="control-label col-md-3">资源标识
+							<span class="required"> * </span>
+						</label>
+						<div class="col-md-4">
+							<form:input path="identity" cssClass="form-control required" readonly="${m.id eq 1}"/>
+							<span class="help-block"></span>
+						</div>
+					</div>
+					<div class="form-group">
 						<label class="control-label col-md-3"> 图标
 						</label>
 						<div class="col-md-4">
@@ -80,15 +89,6 @@
 	                    </label>
 	                    <div class="col-md-4">
 	                        <form:input path="parentIds" cssClass="form-control " readonly="true"/>
-	                        <span class="help-block"></span>
-	                    </div>
-	                </div>
-	                <div class="form-group">
-	                    <label class="control-label col-md-3">权限
-	                        <span class="required"> * </span>
-	                    </label>
-	                    <div class="col-md-4">
-	                        <form:select path="identity" items="${permissionList}" itemLabel="name" itemValue="id" cssClass="form-control required"/>
 	                        <span class="help-block"></span>
 	                    </div>
 	                </div>

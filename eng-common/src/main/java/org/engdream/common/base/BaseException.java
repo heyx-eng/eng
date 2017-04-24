@@ -1,5 +1,5 @@
 package org.engdream.common.base;
 
-public class BaseException extends Exception{
+public class BaseException extends RuntimeException {
 
 }

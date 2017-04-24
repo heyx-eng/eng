@@ -136,8 +136,7 @@ public class Resource extends BaseEntity<Long> implements Treeable<Long> {
 
 	@Override
 	public boolean isRoot() {
-		// TODO Auto-generated method stub
-		return false;
+		return getParentId() != 0;
 	}
 
 	@Override

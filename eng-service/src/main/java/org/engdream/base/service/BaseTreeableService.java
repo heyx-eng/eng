@@ -1,5 +1,6 @@
 package org.engdream.base.service;
 
+import com.baomidou.mybatisplus.enums.SqlLike;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.google.common.base.Function;
@@ -7,6 +8,8 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import org.engdream.base.entity.BaseEntity;
 import org.engdream.base.entity.Treeable;
+import org.engdream.base.exception.ServiceException;
+import org.engdream.common.util.LogUtil;
 
 import java.io.Serializable;
 import java.util.List;
@@ -31,6 +34,10 @@ public class BaseTreeableService<M extends BaseEntity<ID> & Treeable<ID>, ID ext
 
     public void deleteSelfAndChild(List<M> mList) {
         for (M m : mList) {
+            //根节点不能删除
+            if(m.isRoot()){
+                continue;
+            }
             deleteSelfAndChild(m);
         }
     }
@@ -73,7 +80,6 @@ public class BaseTreeableService<M extends BaseEntity<ID> & Treeable<ID>, ID ext
             if ("prev".equals(moveType) && source.getWeight() < target.getWeight()) {
                 return;
             }
-
 
             int sourceWeight = source.getWeight();
             source.setWeight(target.getWeight());
@@ -142,8 +148,29 @@ public class BaseTreeableService<M extends BaseEntity<ID> & Treeable<ID>, ID ext
         super.updateById(source);
         String newSourceChildrenParentIds = source.makeSelfAsNewParentIds();
         //todo
-        //String.format("update %s set parentIds=(?1 || substring(parentIds, length(?2)+1)) where parentIds like concat(?2, %s)", entityName, "'%'");
+        // String.format("update %s set parentIds=(?1 || substring(parentIds, length(?2)+1)) where parentIds like concat(?2, %s)", entityName, "'%'");
+        try {
+            M m = currentModleClass().newInstance();
+            m.setParentIds(newSourceChildrenParentIds);
+            EntityWrapper<M> entityWrapper = new EntityWrapper<>();
+            entityWrapper.like("parent_ids", oldSourceChildrenParentIds, SqlLike.RIGHT);
+            baseMapper.update(m, entityWrapper);
+        } catch (InstantiationException | IllegalAccessException e) {
+            LogUtil.e("树节点移动错误", e);
+            throw new ServiceException();
+        }
         //repositoryHelper.batchUpdate(UPDATE_CHILDREN_PARENT_IDS_QL, newSourceChildrenParentIds, oldSourceChildrenParentIds);
+    }
+
+    /**
+     *
+     * @return
+     */
+    @Override
+    public List<M> findAll() {
+        EntityWrapper<M> entityWrapper = new EntityWrapper<>();
+        entityWrapper.orderBy("weight");
+        return baseMapper.selectList(entityWrapper);
     }
 
     /**

@@ -6,6 +6,7 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.engdream.security.service.SecurityService;
+import org.engdream.sys.entity.User;
 import org.engdream.sys.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -18,10 +19,10 @@ public class UserRealm extends AuthorizingRealm {
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
         String username = (String)principals.getPrimaryPrincipal();
-
+        User user = userService.findByUsername(username);
         SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
-        //authorizationInfo.setRoles(userService.findRoles(username));
-        //authorizationInfo.setStringPermissions(userService.findPermissions(username));
+        authorizationInfo.setRoles(securiryService.findUserRoles(user.getRoleIds()));
+        authorizationInfo.setStringPermissions(securiryService.findUserPermissions(user.getRoleIds()));
         return authorizationInfo;
     }
 

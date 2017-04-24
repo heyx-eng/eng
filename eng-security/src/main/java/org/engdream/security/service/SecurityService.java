@@ -64,7 +64,7 @@ public class SecurityService {
 
         List<Resource> resources = resourceService.findAllMenu();
 
-        Set<String> userPermissions = findUserPermissions(user);
+        Set<String> userPermissions = findUserPermissions(user.getRoleIds());
 
         Iterator<Resource> iter = resources.iterator();
         while (iter.hasNext()) {
@@ -128,12 +128,20 @@ public class SecurityService {
         return s.toString();
     }
 
-    private Set<String> findUserPermissions(User user) {
-        Set<String> perms = new HashSet<>();
-        //List<Role> roles = roleService.findBatchIds(user.getRoleIds());
+    public Set<String> findUserRoles(List<Long> roleIds) {
+        List<Role> roles = getUserRoles(roleIds);
+        Set<String> roleSet = new HashSet<>();
+        for(Role role : roles){
+            roleSet.add(role.getRole());
+        }
+        return roleSet;
+    }
+    private List<Role> getUserRoles(List<Long> roleIds){
         List<Role> roles = new ArrayList<>();
-        //此处为方便走缓存切面
-        for(Long roleId : user.getRoleIds()){
+        if(roleIds == null){
+            return roles;
+        }
+        for(Long roleId : roleIds){
             if(roleId == null){
                 continue;
             }
@@ -143,6 +151,14 @@ public class SecurityService {
             }
             roles.add(role);
         }
+        return roles;
+    }
+    public Set<String> findUserPermissions(List<Long> roleIds) {
+        Set<String> perms = new HashSet<>();
+        //List<Role> roles = roleService.findBatchIds(user.getRoleIds());
+        List<Role> roles = getUserRoles(roleIds);
+        //此处为方便走缓存切面
+
         for(Role role : roles){
             if(role.getResourceIds() == null){
                 continue;
@@ -245,6 +261,5 @@ public class SecurityService {
     private boolean matches(User user, String newPassword) {
         return user.getPassword().equals(encryptPassword(user.getUsername(), newPassword, user.getSalt()));
     }
-
 
 }

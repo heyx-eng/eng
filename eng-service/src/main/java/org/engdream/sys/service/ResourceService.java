@@ -3,7 +3,6 @@ package org.engdream.sys.service;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import org.engdream.base.service.BaseTreeableService;
 import org.engdream.sys.entity.Resource;
-import org.engdream.sys.enums.ResourceType;
 import org.engdream.sys.mapper.ResourceMapper;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +24,7 @@ public class ResourceService extends BaseTreeableService<Resource, Long> {
 
     public List<Resource> findAllMenu() {
         EntityWrapper<Resource> entityWrapper = new EntityWrapper<>();
-        entityWrapper.eq("available", 1).eq("type", ResourceType.menu.name()).
+        entityWrapper.eq("available", 1).
                 orderBy("parent_id", false).orderBy("weight", false);
         return findList(entityWrapper);
     }

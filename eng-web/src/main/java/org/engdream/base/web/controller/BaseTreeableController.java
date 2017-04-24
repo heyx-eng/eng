@@ -5,6 +5,7 @@ import org.engdream.base.entity.BaseEntity;
 import org.engdream.base.entity.Treeable;
 import org.engdream.base.service.BaseTreeableService;
 import org.engdream.base.web.entity.ZTree;
+import org.engdream.base.web.enums.PermissionEnum;
 import org.engdream.common.util.LogUtil;
 import org.engdream.common.util.ReflectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +39,7 @@ public abstract class BaseTreeableController<M extends BaseEntity<ID> & Treeable
     
     @RequestMapping(value = "page/edit", method = RequestMethod.GET)
 	public String showEditForm(Model model, @RequestParam("id")ID id){
-		assertPermission(PERMS_VIEW);
+		assertPermission(PermissionEnum.update.name());
 		setCommonDate(model);
 		M m = baseTreeableService.findById(id);
 		model.addAttribute("m", m);
@@ -46,7 +47,7 @@ public abstract class BaseTreeableController<M extends BaseEntity<ID> & Treeable
 	}
     @RequestMapping(value = "update", method = RequestMethod.PUT)
 	public ResponseEntity<String> update(@Valid M m, BindingResult bindResult){
-		assertPermission(PERMS_UPDATE);
+		assertPermission(PermissionEnum.update.name());
 		Assert.notNull(m, "entity must not be null");
 		if(bindResult.hasErrors()){
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("请求参数错误");
@@ -58,6 +59,7 @@ public abstract class BaseTreeableController<M extends BaseEntity<ID> & Treeable
 
     @RequestMapping(value = "get", method = RequestMethod.GET)
     public ResponseEntity<M> get(ID id) {
+        assertPermission(PermissionEnum.view.name());
     	M m = baseTreeableService.findById(id);
     	if(m == null){
     		return new ResponseEntity<>(m, HttpStatus.NO_CONTENT);
@@ -65,8 +67,18 @@ public abstract class BaseTreeableController<M extends BaseEntity<ID> & Treeable
         return ResponseEntity.ok(m);
     }
 
+    @RequestMapping(value = "move", method = RequestMethod.GET)
+    public ResponseEntity<Void> move(ID sourceId, ID targetId, String moveType) {
+        assertPermission(PermissionEnum.view.name());
+        M src = baseTreeableService.findById(sourceId);
+        M target = baseTreeableService.findById(targetId);
+        baseTreeableService.move(src, target, moveType);
+        return ResponseEntity.ok(null);
+    }
+
     @RequestMapping(value = "appendChild", method = RequestMethod.POST)
     public ResponseEntity<M> appendChild(ID parentId) {
+        assertPermission(PermissionEnum.create.name());
         M child = null;
         M parent = baseTreeableService.findById(parentId);
         try {
@@ -92,6 +104,7 @@ public abstract class BaseTreeableController<M extends BaseEntity<ID> & Treeable
     public ResponseEntity<List<ZTree<ID>>> tree(
             @RequestParam(required = false) ID[] checkIds,
             @RequestParam(required = false) boolean onlySelectLeaf) {
+        assertPermission(PermissionEnum.view.name());
         List<M> list = baseTreeableService.findAll();
         return ResponseEntity.ok(convertToZtreeList(list, true, onlySelectLeaf, checkIds));
     }

@@ -30,7 +30,11 @@
 		var ztree = $("#ztree").tree({
             baseUrl: '${ctx }/sys/resource',
             edit: {
-                enable: true
+                enable: true,
+                drag: {
+                    isCopy: false,
+                    isMove: false
+                }
             }
         });
     });
